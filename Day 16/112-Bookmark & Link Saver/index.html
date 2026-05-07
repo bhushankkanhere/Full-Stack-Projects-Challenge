@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmark & Link Saver</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Bookmark Manager
+            </h1>
+            <button id="addBookmarkBtn" class="btn-primary">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Bookmark
+            </button>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search bookmarks..." class="search-input">
+                <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="M21 21l-4.35-4.35"></path>
+                </svg>
+            </div>
+            <div class="filter-controls">
+                <select id="folderFilter" class="filter-select">
+                    <option value="">All Folders</option>
+                </select>
+                <select id="tagFilter" class="filter-select">
+                    <option value="">All Tags</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div id="bookmarksContainer" class="bookmarks-grid">
+            <!-- Bookmarks will be dynamically added -->
+        </div>
+        <div id="emptyState" class="empty-state hidden">
+            <svg viewBox="0 0 24 24" width="80" height="80" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <h2>No bookmarks yet</h2>
+            <p>Click "Add Bookmark" to save your first link!</p>
+        </div>
+    </main>
+
+    <!-- Add/Edit Bookmark Modal -->
+    <div id="bookmarkModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Bookmark</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="bookmarkForm" class="modal-form">
+                <input type="hidden" id="bookmarkId">
+                <div class="form-group">
+                    <label for="title">Title *</label>
+                    <input type="text" id="title" required placeholder="e.g., GitHub">
+                </div>
+                <div class="form-group">
+                    <label for="url">URL *</label>
+                    <input type="url" id="url" required placeholder="https://github.com">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="3" placeholder="Brief description of this bookmark..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="folder">Folder</label>
+                    <input type="text" id="folder" placeholder="e.g., Development, Social Media">
+                </div>
+                <div class="form-group">
+                    <label for="tags">Tags (comma-separated)</label>
+                    <input type="text" id="tags" placeholder="e.g., coding, git, tools">
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancelBtn" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Bookmark</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

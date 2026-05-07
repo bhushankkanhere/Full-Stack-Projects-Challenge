@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Journal & Diary</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📔 Personal Journal & Diary</h1>
+            <button id="addEntryBtn" class="btn btn-primary">+ New Entry</button>
+        </header>
+
+        <div class="filters">
+            <input type="text" id="searchInput" placeholder="Search entries..." class="search-input">
+            <select id="moodFilter" class="filter-select">
+                <option value="all">All Moods</option>
+                <option value="😊">😊 Happy</option>
+                <option value="😌">😌 Calm</option>
+                <option value="😐">😐 Neutral</option>
+                <option value="😢">😢 Sad</option>
+                <option value="😡">😡 Angry</option>
+                <option value="😰">😰 Anxious</option>
+                <option value="🥰">🥰 Loved</option>
+                <option value="💪">💪 Motivated</option>
+            </select>
+            <select id="categoryFilter" class="filter-select">
+                <option value="all">All Categories</option>
+                <option value="personal">Personal</option>
+                <option value="work">Work</option>
+                <option value="health">Health</option>
+                <option value="relationships">Relationships</option>
+                <option value="travel">Travel</option>
+                <option value="learning">Learning</option>
+            </select>
+        </div>
+
+        <div id="entriesContainer" class="entries-container">
+            <!-- Journal entries will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Modal for adding/editing entries -->
+    <div id="entryModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2 id="modalTitle">New Journal Entry</h2>
+            <form id="entryForm">
+                <div class="form-group">
+                    <label for="entryDate">Date</label>
+                    <input type="date" id="entryDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="entryTitle">Title</label>
+                    <input type="text" id="entryTitle" placeholder="Entry title" required>
+                </div>
+                <div class="form-group">
+                    <label for="entryMood">How are you feeling?</label>
+                    <div class="mood-selector">
+                        <button type="button" class="mood-btn" data-mood="😊">😊 Happy</button>
+                        <button type="button" class="mood-btn" data-mood="😌">😌 Calm</button>
+                        <button type="button" class="mood-btn" data-mood="😐">😐 Neutral</button>
+                        <button type="button" class="mood-btn" data-mood="😢">😢 Sad</button>
+                        <button type="button" class="mood-btn" data-mood="😡">😡 Angry</button>
+                        <button type="button" class="mood-btn" data-mood="😰">😰 Anxious</button>
+                        <button type="button" class="mood-btn" data-mood="🥰">🥰 Loved</button>
+                        <button type="button" class="mood-btn" data-mood="💪">💪 Motivated</button>
+                    </div>
+                    <input type="hidden" id="entryMood" required>
+                </div>
+                <div class="form-group">
+                    <label for="entryCategory">Category</label>
+                    <select id="entryCategory" required>
+                        <option value="personal">Personal</option>
+                        <option value="work">Work</option>
+                        <option value="health">Health</option>
+                        <option value="relationships">Relationships</option>
+                        <option value="travel">Travel</option>
+                        <option value="learning">Learning</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="entryContent">Your Thoughts</label>
+                    <textarea id="entryContent" placeholder="Write your thoughts here..." rows="12" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="entryTags">Tags (comma-separated)</label>
+                    <input type="text" id="entryTags" placeholder="e.g., gratitude, reflection, goals">
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">💾 Save Entry</button>
+                    <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

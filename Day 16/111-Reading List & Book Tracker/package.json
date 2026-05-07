@@ -1,0 +1,12 @@
+{
+  "name": "reading-list-book-tracker",
+  "version": "1.0.0",
+  "description": "Reading List and Book Tracker - Full Stack Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["books", "reading", "tracker"],
+  "license": "MIT"
+}

@@ -1,0 +1,12 @@
+{
+  "collections": [
+    {
+      "id": "1",
+      "name": "Example API",
+      "requests": [
+        { "id": "1", "name": "Get Users", "url": "https://jsonplaceholder.typicode.com/users", "method": "GET", "headers": {}, "body": "", "collectionId": "1" },
+        { "id": "2", "name": "Get Posts", "url": "https://jsonplaceholder.typicode.com/posts", "method": "GET", "headers": {}, "body": "", "collectionId": "1" }
+      ]
+    }
+  ]
+}

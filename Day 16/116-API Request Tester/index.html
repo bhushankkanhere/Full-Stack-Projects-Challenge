@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Request Tester</title>
+  <style>
+    :root{--bg:#0d1117;--bg-card:#161b22;--text:#c9d1d9;--text-secondary:#8b949e;--accent:#58a6ff;--accent-hover:#388bfd;--success:#3fb950;--border:#30363d;--warning:#d29922;--danger:#f85149;--shadow:0 2px 8px rgba(0,0,0,0.4)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',system-ui,monospace;background:var(--bg);color:var(--text);min-height:100vh}
+    .header{background:linear-gradient(135deg,#161b22,#0d1117);padding:16px 24px;border-bottom:1px solid var(--border)}
+    .header h1{font-size:20px;color:var(--accent)}
+    .container{max-width:1200px;margin:20px auto;padding:0 20px;display:grid;grid-template-columns:250px 1fr;gap:20px}
+    .sidebar{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px}
+    .sidebar h3{font-size:14px;color:var(--text-secondary);margin-bottom:12px;text-transform:uppercase}
+    .collection{margin-bottom:16px}
+    .collection-header{display:flex;justify-content:space-between;align-items:center;padding:8px;cursor:pointer;border-radius:6px}
+    .collection-header:hover{background:rgba(88,166,255,0.1)}
+    .request-item{padding:8px 12px;font-size:13px;cursor:pointer;border-radius:6px;margin:2px 0;display:flex;align-items:center;gap:8px}
+    .request-item:hover{background:rgba(88,166,255,0.1)}
+    .request-item.active{background:rgba(88,166,255,0.2);color:var(--accent)}
+    .method-badge{padding:2px 6px;border-radius:4px;font-size:11px;font-weight:700;min-width:40px;text-align:center}
+    .method-get{background:rgba(63,185,80,.2);color:#3fb950}
+    .method-post{background:rgba(88,166,255,.2);color:#58a6ff}
+    .method-put{background:rgba(210,153,34,.2);color:#d29922}
+    .method-delete{background:rgba(248,81,73,.2);color:#f85149}
+    .method-patch{background:rgba(188,140,255,.2);color:#bc8cff}
+    .main{display:flex;flex-direction:column;gap:16px}
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px}
+    .url-bar{display:flex;gap:10px;margin-bottom:16px}
+    .url-bar select{padding:10px;border:1px solid var(--border);border-radius:8px;background:#0d1117;color:var(--text);font-weight:600}
+    .url-bar input{flex:1;padding:10px;border:1px solid var(--border);border-radius:8px;background:#0d1117;color:var(--text);font-family:monospace}
+    .btn{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px}
+    .btn-primary{background:var(--success);color:#fff}.btn-primary:hover{background:#2ea043}
+    .btn-secondary{background:var(--border);color:var(--text)}.btn-sm{padding:6px 12px;font-size:12px}
+    .tabs{display:flex;gap:4px;margin-bottom:12px}
+    .tab{padding:8px 16px;border:none;background:none;border-radius:6px;cursor:pointer;font-size:13px;color:var(--text-secondary)}
+    .tab.active{background:var(--accent);color:#fff}
+    .tab-content{display:none}.tab-content.active{display:block}
+    textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;background:#0d1117;color:var(--text);font-family:monospace;font-size:13px;resize:vertical;min-height:100px}
+    .response-panel{border-top:1px solid var(--border);padding-top:16px}
+    .status-bar{display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap}
+    .status-item{padding:6px 12px;border-radius:6px;font-size:13px}
+    .status-2xx{background:rgba(63,185,80,.2);color:#3fb950}
+    .status-4xx{background:rgba(210,153,34,.2);color:#d29922}
+    .status-5xx{background:rgba(248,81,73,.2);color:#f85149}
+    .response-body{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:12px;font-family:monospace;font-size:13px;max-height:400px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+    .form-group{margin-bottom:12px}
+    .form-group label{display:block;font-size:13px;color:var(--text-secondary);margin-bottom:4px}
+    .form-group input{width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:#0d1117;color:var(--text);font-size:13px}
+    .empty{text-align:center;padding:40px;color:var(--text-secondary)}
+    @media(max-width:768px){.container{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="header"><h1>API Request Tester</h1></div>
+  <div class="container">
+    <div class="sidebar">
+      <h3>Collections</h3>
+      <div id="collectionList"></div>
+      <button class="btn btn-secondary btn-sm" style="width:100%;margin-top:10px" onclick="addCollection()">+ New Collection</button>
+      <button class="btn btn-secondary btn-sm" style="width:100%;margin-top:6px" onclick="saveCurrentRequest()">Save Request</button>
+    </div>
+    <div class="main">
+      <div class="card">
+        <div class="url-bar">
+          <select id="method"><option value="GET">GET</option><option value="POST">POST</option><option value="PUT">PUT</option><option value="PATCH">PATCH</option><option value="DELETE">DELETE</option></select>
+          <input type="text" id="url" placeholder="https://api.example.com/users">
+          <button class="btn btn-primary" onclick="sendRequest()">Send</button>
+        </div>
+        <div class="form-group"><label>Request Name (for saving)</label><input type="text" id="reqName" placeholder="e.g., Get all users"></div>
+      </div>
+      <div class="card">
+        <div class="tabs">
+          <button class="tab active" onclick="switchReqTab('body')">Body</button>
+          <button class="tab" onclick="switchReqTab('headers')">Headers</button>
+          <button class="tab" onclick="switchReqTab('auth')">Auth</button>
+        </div>
+        <div class="tab-content active" id="tab-body"><textarea id="reqBody" placeholder='{"key": "value"}'></textarea></div>
+        <div class="tab-content" id="tab-headers"><textarea id="reqHeaders" placeholder='{"Content-Type": "application/json"}'></textarea></div>
+        <div class="tab-content" id="tab-auth"><div class="form-group"><label>Authorization Header</label><input type="text" id="authHeader" placeholder="Bearer YOUR_TOKEN"></div></div>
+      </div>
+      <div class="card response-panel" id="responsePanel" style="display:none">
+        <h3 style="margin-bottom:12px">Response</h3>
+        <div class="status-bar" id="statusBar"></div>
+        <div class="tabs">
+          <button class="tab active" onclick="switchResTab('body')">Body</button>
+          <button class="tab" onclick="switchResTab('resHeaders')">Headers</button>
+        </div>
+        <div class="tab-content active" id="tab-body-res"><div class="response-body" id="resBody"></div></div>
+        <div class="tab-content" id="tab-resHeaders"><div class="response-body" id="resHeaders"></div></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let collections=[],currentCollection=null,currentRequest=null;
+    async function loadData(){collections=await(await fetch('/api/collections')).json();renderCollections();if(!currentCollection&&collections.length){currentCollection=collections[0].id;renderRequests();}}
+    function renderCollections(){document.getElementById('collectionList').innerHTML=collections.map(c=>`<div class="collection"><div class="collection-header" onclick="currentCollection='${c.id}';renderRequests()"><span>${c.name}</span><span style="color:var(--text-secondary)">(${c.requests.length})</span></div>${currentCollection===c.id?c.requests.map(r=>`<div class="request-item" onclick="loadRequest('${r.id}')"><span class="method-badge method-${r.method?.toLowerCase()}">${r.method}</span><span>${r.name||r.url}</span></div>`).join(''):''}</div>`).join('');}
+    function renderRequests(){renderCollections();}
+    function loadRequest(id){let req;collections.forEach(c=>{const found=c.requests.find(r=>r.id===id);if(found)req=found;});if(!req)return;currentRequest=req;document.getElementById('url').value=req.url;document.getElementById('method').value=req.method;document.getElementById('reqBody').value=req.body||'';document.getElementById('reqHeaders').value=JSON.stringify(req.headers||{},null,2);document.getElementById('reqName').value=req.name||'';renderCollections();}
+    async function sendRequest(){const url=document.getElementById('url').value;if(!url)return alert('Enter URL');const method=document.getElementById('method').value;let headers={};try{headers=JSON.parse(document.getElementById('reqHeaders').value||'{}')}catch{}const auth=document.getElementById('authHeader').value;if(auth)headers['Authorization']=auth;const body=document.getElementById('reqBody').value||null;const res=await fetch('/api/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url,method,headers,body})});const result=await res.json();document.getElementById('responsePanel').style.display='block';const statusClass=result.status>=500?'status-5xx':result.status>=400?'status-4xx':'status-2xx';document.getElementById('statusBar').innerHTML=`<div class="status-item ${statusClass}">Status: ${result.status||'Error'}</div><div class="status-item" style="background:rgba(88,166,255,.2);color:#58a6ff">Time: ${result.duration}ms</div>`;const bodyStr=typeof result.body==='object'?JSON.stringify(result.body,null,2):result.body||result.error||'';document.getElementById('resBody').textContent=bodyStr;document.getElementById('resHeaders').textContent=JSON.stringify(result.headers||{},null,2);}
+    async function saveCurrentRequest(){const name=document.getElementById('reqName').value||document.getElementById('url').value;if(!name||!currentCollection)return alert('Enter request name and select a collection');const req={name,url:document.getElementById('url').value,method:document.getElementById('method').value,headers:{},body:document.getElementById('reqBody').value,collectionId:currentCollection};await fetch('/api/requests',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(req)});loadData();}
+    async function addCollection(){const name=prompt('Collection name:');if(!name)return;await fetch('/api/collections',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name})});loadData();}
+    function switchReqTab(tab){document.querySelectorAll('.card:nth-child(2) .tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.card:nth-child(2) .tab-content').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');document.getElementById(`tab-${tab}`).classList.add('active');}
+    function switchResTab(tab){document.querySelectorAll('.response-panel .tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.response-panel .tab-content').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');document.getElementById(`tab-${tab}`).classList.add('active');}
+    loadData();
+  </script>
+</body>
+</html>
