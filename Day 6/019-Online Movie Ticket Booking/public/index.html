@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Movie Ticket Booking</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">
+        <i class="fas fa-film"></i>
+        <span>CinemaBook</span>
+      </div>
+      <ul>
+        <li><a href="#movies">Movies</a></li>
+        <li><a href="#booking">Book Tickets</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="hero">
+      <h1>Welcome to CinemaBook</h1>
+      <p>Book your movie tickets online with ease</p>
+      <button onclick="scrollToSection('movies')">Browse Movies</button>
+    </section>
+
+    <section id="movies">
+      <h2>Now Showing</h2>
+      <div id="movies-grid" class="movies-grid">
+        <!-- Movies will be loaded here -->
+      </div>
+    </section>
+
+    <section id="booking" class="booking-section">
+      <h2>Book Your Tickets</h2>
+      <div class="booking-container">
+        <div class="movie-selection">
+          <h3>Select Movie</h3>
+          <select id="movie-select">
+            <option value="">Choose a movie</option>
+          </select>
+        </div>
+
+        <div class="showtime-selection">
+          <h3>Select Showtime</h3>
+          <div id="showtimes" class="showtimes">
+            <!-- Showtimes will be loaded here -->
+          </div>
+        </div>
+
+        <div class="seat-selection">
+          <h3>Select Seats</h3>
+          <div class="screen">SCREEN</div>
+          <div id="seats" class="seats">
+            <!-- Seats will be generated here -->
+          </div>
+          <div class="seat-legend">
+            <div class="legend-item">
+              <div class="seat available"></div>
+              <span>Available</span>
+            </div>
+            <div class="legend-item">
+              <div class="seat selected"></div>
+              <span>Selected</span>
+            </div>
+            <div class="legend-item">
+              <div class="seat occupied"></div>
+              <span>Occupied</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="booking-summary">
+          <h3>Booking Summary</h3>
+          <div id="summary">
+            <p>No seats selected</p>
+          </div>
+          <button id="book-btn" disabled>Proceed to Payment</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="payment-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Payment Details</h2>
+        <form id="payment-form">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" required>
+          </div>
+          <div class="form-group">
+            <label for="card-number">Card Number</label>
+            <input type="text" id="card-number" placeholder="1234 5678 9012 3456" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="expiry">Expiry Date</label>
+              <input type="text" id="expiry" placeholder="MM/YY" required>
+            </div>
+            <div class="form-group">
+              <label for="cvv">CVV</label>
+              <input type="text" id="cvv" placeholder="123" required>
+            </div>
+          </div>
+          <button type="submit">Complete Booking</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="confirmation-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Booking Confirmed!</h2>
+        <div id="confirmation-details">
+          <!-- Confirmation details will be shown here -->
+        </div>
+        <button onclick="location.reload()">Book Another Ticket</button>
+      </div>
+    </section>
+
+    <section id="about">
+      <h2>About CinemaBook</h2>
+      <p>Experience the future of movie ticket booking with our easy-to-use online platform. Select your favorite movies, choose the best seats, and enjoy a seamless booking experience.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 CinemaBook. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

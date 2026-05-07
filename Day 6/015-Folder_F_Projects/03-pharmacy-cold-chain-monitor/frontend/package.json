@@ -1,0 +1,9 @@
+{
+  "name": "03-pharmacy-cold-chain-monitor-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve . -l 4173",
+    "start": "npx serve . -l 4173"
+  }
+}
