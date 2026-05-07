@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Portal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero-section">
+      <div class="hero-copy">
+        <p class="eyebrow">Job Portal</p>
+        <h1>Find your next career move</h1>
+        <p>Search real-time job openings, filter by location and job type, and apply instantly with our smart career dashboard.</p>
+      </div>
+      <div class="hero-panel">
+        <form id="searchForm" class="search-form" autocomplete="off">
+          <label for="searchInput">Search jobs</label>
+          <div class="search-row">
+            <input id="searchInput" type="text" placeholder="Search by title, company or role" />
+            <button type="submit">Search</button>
+          </div>
+
+          <div class="filter-grid">
+            <select id="locationFilter" aria-label="Filter by location">
+              <option value="">All locations</option>
+            </select>
+            <select id="typeFilter" aria-label="Filter by type">
+              <option value="">All types</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Contract">Contract</option>
+              <option value="Remote">Remote</option>
+            </select>
+            <select id="companyFilter" aria-label="Filter by company">
+              <option value="">All companies</option>
+            </select>
+          </div>
+        </form>
+
+        <div class="hero-stats">
+          <div>
+            <strong id="jobCount">0</strong>
+            <span>Open positions</span>
+          </div>
+          <div>
+            <strong id="lastUpdated">--</strong>
+            <span>Last refreshed</span>
+          </div>
+          <div>
+            <strong id="fastApplyCount">0</strong>
+            <span>Fast apply roles</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="quick-tags">
+      <span>Popular searches:</span>
+      <button type="button" class="tag-btn">Software Engineer</button>
+      <button type="button" class="tag-btn">Data Analyst</button>
+      <button type="button" class="tag-btn">Product Manager</button>
+      <button type="button" class="tag-btn">Remote</button>
+      <button type="button" class="tag-btn">Mumbai</button>
+      <button type="button" class="tag-btn">Delhi</button>
+    </section>
+
+    <section class="jobs-section">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Live listings</p>
+          <h2>Available job openings</h2>
+        </div>
+        <p id="resultMessage" class="result-message"></p>
+      </div>
+      <div id="jobsList" class="jobs-list"></div>
+    </section>
+
+    <section class="insight-panel">
+      <div class="insight-card">
+        <h3>Why use this portal?</h3>
+        <ul>
+          <li>Live job search with fast application</li>
+          <li>Filter by role, location, type, and company</li>
+          <li>Career-ready details with salary, experience & remote tags</li>
+        </ul>
+      </div>
+      <div class="insight-card highlight-card">
+        <h3>Top companies hiring</h3>
+        <div class="company-grid">
+          <span>TeraTech</span>
+          <span>ByteLabs</span>
+          <span>GenomeAI</span>
+          <span>CloudCrest</span>
+          <span>PulsePay</span>
+          <span>DataVista</span>
+        </div>
+      </div>
+    </section>
+
+    <div id="applyModal" class="modal hidden">
+      <div class="modal-body">
+        <button id="modalClose" class="modal-close">×</button>
+        <h3>Apply for this role</h3>
+        <p id="modalJobTitle"></p>
+        <form id="applyForm" class="apply-form">
+          <label>Full name</label>
+          <input type="text" id="applicantName" required />
+          <label>Email</label>
+          <input type="email" id="applicantEmail" required />
+          <label>Why you're a good fit</label>
+          <textarea id="applicantMessage" rows="4" placeholder="One or two sentences"></textarea>
+          <button type="submit">Send application</button>
+        </form>
+        <p id="applyStatus" class="apply-status"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "33-cross-border-payroll-exception-manager-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve . -l 4173",
+    "start": "npx serve . -l 4173"
+  }
+}

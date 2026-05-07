@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Card Creator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="paper">
+  <main class="shell">
+    <section class="hero">
+      <p class="serial">Project 138</p>
+      <h1>Recipe Card Creator</h1>
+      <p class="subtitle">Compose recipe cards with ingredients and prep markers.</p>
+      <div class="toolbar">
+        <input id="entryA" type="text" placeholder="Title">
+        <input id="entryB" type="text" placeholder="Label">
+        <input id="entryC" type="text" placeholder="Value">
+        <button id="addEntry" type="button">Add</button>
+      </div>
+    </section>
+    <section class="workspace">
+      <div class="workspace-head">
+        <h2>Interactive Board</h2>
+        <div class="workspace-tools">
+          <input id="searchInput" type="search" placeholder="Filter">
+          <button id="shuffleButton" type="button">Shuffle</button>
+        </div>
+      </div>
+      <div id="stage" class="stage"></div>
+    </section>
+  </main>
+  <script>
+    window.projectConfig = { title: "Recipe Card Creator", accent: "#ef8a17", mode: "paper", items: [{"a":"Citrus Pasta","b":"Dinner","c":"18 min"},{"a":"Berry Toast","b":"Breakfast","c":"7 min"},{"a":"Green Bowl","b":"Lunch","c":"12 min"}] };
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

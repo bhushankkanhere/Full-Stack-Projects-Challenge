@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Password Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="card">
+      <p class="eyebrow">Project 08</p>
+      <h1>Password Generator</h1>
+      <div class="output">
+        <input id="passwordOutput" readonly value="" />
+        <button id="copyBtn">Copy</button>
+      </div>
+      <label>Length <span id="lengthValue">12</span></label>
+      <input id="lengthRange" type="range" min="6" max="32" value="12" />
+      <div class="options">
+        <label><input type="checkbox" id="uppercase" checked /> Uppercase</label>
+        <label><input type="checkbox" id="lowercase" checked /> Lowercase</label>
+        <label><input type="checkbox" id="numbers" checked /> Numbers</label>
+        <label><input type="checkbox" id="symbols" checked /> Symbols</label>
+      </div>
+      <div class="strength">
+        <span>Strength</span>
+        <strong id="strengthLabel">Strong</strong>
+      </div>
+      <button id="generateBtn">Generate Password</button>
+    </section>
+  </main>
+  <script src="./script.js"></script>
+</body>
+</html>
