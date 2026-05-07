@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h2>Give Feedback</h2>
+
+    <textarea id="text" placeholder="Enter feedback"></textarea>
+
+    <select id="rating">
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+    </select>
+
+    <button onclick="add()">Submit</button>
+
+    <h3>Your Feedback</h3>
+    <ul id="list"></ul>
+
+    <button onclick="logout()">Logout</button>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
