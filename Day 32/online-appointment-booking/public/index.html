@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Appointment Booking</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <section class="card form-card">
+        <h1>Online Appointment Booking</h1>
+        <p class="subtitle">Book your slot and manage upcoming appointments.</p>
+
+        <form id="appointmentForm" class="form-grid" novalidate>
+          <label>
+            Name
+            <input id="name" type="text" placeholder="Your name" required />
+          </label>
+
+          <label>
+            Date
+            <input id="date" type="date" required />
+          </label>
+
+          <label>
+            Time
+            <input id="time" type="time" required />
+          </label>
+
+          <button type="submit">Book Appointment</button>
+        </form>
+
+        <p id="message" class="message" aria-live="polite"></p>
+      </section>
+
+      <section class="card">
+        <div class="head-row">
+          <h2>Appointments</h2>
+          <span id="count" class="count-pill">0</span>
+        </div>
+
+        <div id="calendarGrid" class="calendar-grid"></div>
+        <div id="appointmentList" class="appointment-list"></div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,154 @@
+:root {
+  --bg: #f4f7fb;
+  --panel: #ffffff;
+  --text: #1f2937;
+  --muted: #66758a;
+  --primary: #1f67d6;
+  --primary-dark: #1552b2;
+  --border: #d9e3ef;
+  --success: #1f8b4c;
+  --error: #cb3c3c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, #eaf1ff 0%, var(--bg) 52%, #eef2f8 100%);
+}
+
+.layout {
+  max-width: 1100px;
+  margin: 1.5rem auto;
+  padding: 0 1rem 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 0 0.8rem;
+}
+
+.subtitle {
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+
+.form-stack label {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+input,
+textarea,
+button {
+  width: 100%;
+  font: inherit;
+}
+
+input,
+textarea {
+  margin-top: 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.7rem;
+  background: #fff;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.button-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.6rem;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--primary);
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--primary-dark);
+}
+
+button.secondary {
+  background: #5a6578;
+}
+
+button.secondary:hover {
+  background: #4b5566;
+}
+
+.message {
+  min-height: 1.1rem;
+  margin: 0.8rem 0 0;
+}
+
+.message.success {
+  color: var(--success);
+}
+
+.message.error {
+  color: var(--error);
+}
+
+.resume-template {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  background: #fff;
+}
+
+.resume-template h3 {
+  font-size: 1.5rem;
+  border-bottom: 2px solid #edf2fa;
+  padding-bottom: 0.45rem;
+}
+
+.resume-template section {
+  margin-top: 0.9rem;
+}
+
+.resume-template ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.resume-template li {
+  margin-bottom: 0.35rem;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .button-row {
+    grid-template-columns: 1fr;
+  }
+}

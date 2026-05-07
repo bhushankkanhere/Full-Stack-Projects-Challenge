@@ -1,0 +1,123 @@
+:root {
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #65748b;
+  --primary: #1e62d0;
+  --primary-dark: #174da3;
+  --border: #d9e2ec;
+  --success: #1f8a53;
+  --error: #c83d3d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, #ecf3ff 0%, var(--bg) 54%, #eef2f7 100%);
+}
+
+.container {
+  max-width: 780px;
+  margin: 2rem auto;
+  padding: 0 1rem 1.5rem;
+}
+
+h1,
+h2 {
+  margin: 0 0 0.85rem;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 8px 24px rgba(31, 41, 55, 0.06);
+}
+
+.form-stack label {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+input,
+select,
+button {
+  width: 100%;
+  font: inherit;
+}
+
+input,
+select {
+  margin-top: 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.68rem;
+  background: #fff;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: #fff;
+  background: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--primary-dark);
+}
+
+.item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem;
+  margin-bottom: 0.7rem;
+}
+
+.item:last-child {
+  margin-bottom: 0;
+}
+
+.item p {
+  margin: 0.2rem 0;
+}
+
+.label {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.empty {
+  margin: 0;
+  color: var(--muted);
+}
+
+.message {
+  min-height: 1.1rem;
+  margin: 0.2rem 0 0;
+  font-size: 0.92rem;
+}
+
+.message.success {
+  color: var(--success);
+}
+
+.message.error {
+  color: var(--error);
+}
+
+@media (max-width: 640px) {
+  .container {
+    margin-top: 1rem;
+  }
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume Builder</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="panel form-panel">
+        <h1>Resume Builder</h1>
+        <p class="subtitle">Enter your details and generate a clean resume preview.</p>
+
+        <form id="resumeForm" class="form-stack">
+          <label>
+            Full Name
+            <input id="name" type="text" placeholder="Your full name" required />
+          </label>
+
+          <label>
+            Skills (one per line)
+            <textarea id="skills" rows="5" placeholder="JavaScript&#10;Node.js&#10;HTML" required></textarea>
+          </label>
+
+          <label>
+            Education (one per line)
+            <textarea id="education" rows="5" placeholder="B.Sc Computer Science - ABC College&#10;Frontend Bootcamp - XYZ Institute" required></textarea>
+          </label>
+
+          <div class="button-row">
+            <button type="submit">Save Resume</button>
+            <button type="button" id="downloadBtn" class="secondary">Download Resume</button>
+            <button type="button" id="printBtn" class="secondary">Print / PDF</button>
+          </div>
+        </form>
+
+        <p id="message" class="message" aria-live="polite"></p>
+      </section>
+
+      <section class="panel preview-panel">
+        <h2>Live Preview</h2>
+        <article id="resumePreview" class="resume-template">
+          <header>
+            <h3 id="previewName">Your Name</h3>
+          </header>
+
+          <section>
+            <h4>Skills</h4>
+            <ul id="previewSkills">
+              <li>Add skills to see preview</li>
+            </ul>
+          </section>
+
+          <section>
+            <h4>Education</h4>
+            <ul id="previewEducation">
+              <li>Add education details to see preview</li>
+            </ul>
+          </section>
+        </article>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

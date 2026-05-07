@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Polling App</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Online Polling App</h1>
+
+      <section class="card">
+        <h2>Create Poll</h2>
+        <form id="pollForm" class="form-stack">
+          <label>
+            Question
+            <input id="question" type="text" placeholder="What should we learn next?" required />
+          </label>
+
+          <label>
+            Option 1
+            <input class="option-input" type="text" placeholder="React" required />
+          </label>
+
+          <label>
+            Option 2
+            <input class="option-input" type="text" placeholder="Node.js" required />
+          </label>
+
+          <div id="extraOptions"></div>
+          <button type="button" id="addOptionBtn" class="secondary">Add Option</button>
+          <button type="submit">Create Poll</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Live Polls</h2>
+        <div id="pollList" class="poll-list"></div>
+      </section>
+
+      <p id="message" class="message" aria-live="polite"></p>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

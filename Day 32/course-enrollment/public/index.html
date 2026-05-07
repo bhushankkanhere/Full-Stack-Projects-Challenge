@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course Enrollment</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Course Enrollment</h1>
+
+      <section class="card">
+        <h2>Add Course</h2>
+        <form id="courseForm" class="form-stack">
+          <label>
+            Course Title
+            <input id="courseTitle" type="text" placeholder="e.g. Web Development" required />
+          </label>
+          <button type="submit">Add Course</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Enroll Student</h2>
+        <form id="enrollmentForm" class="form-stack">
+          <label>
+            Student Name
+            <input id="studentName" type="text" placeholder="e.g. Asha" required />
+          </label>
+
+          <label>
+            Select Course
+            <select id="courseSelect" required>
+              <option value="">Choose a course</option>
+            </select>
+          </label>
+
+          <button type="submit">Enroll</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>View Enrollments</h2>
+        <div id="enrollmentList" class="list"></div>
+      </section>
+
+      <p id="message" class="message" aria-live="polite"></p>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

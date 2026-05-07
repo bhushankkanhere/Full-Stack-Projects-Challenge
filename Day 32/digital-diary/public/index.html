@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital Diary</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Digital Diary</h1>
+
+      <form id="entryForm" class="entry-form">
+        <label>
+          Date
+          <input type="date" id="date" required />
+        </label>
+
+        <label>
+          Entry
+          <textarea id="text" rows="4" placeholder="Write your thoughts..." required></textarea>
+        </label>
+
+        <button type="submit">Add Entry</button>
+      </form>
+
+      <section class="entries-section">
+        <h2>Your Entries</h2>
+        <div id="entries" class="entries-list"></div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

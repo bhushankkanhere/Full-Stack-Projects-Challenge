@@ -1,0 +1,12 @@
+{
+  "name": "resume-builder",
+  "version": "1.0.0",
+  "description": "Simple full-stack resume builder with Express and JSON storage",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

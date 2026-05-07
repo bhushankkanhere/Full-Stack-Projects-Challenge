@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Gallery Management</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <section class="card form-card">
+        <h1>Image Gallery Management</h1>
+        <p class="subtitle">Add image links to build your gallery.</p>
+
+        <form id="imageForm" class="form-grid">
+          <label>
+            Image Title
+            <input id="title" type="text" placeholder="e.g. Sunset View" required />
+          </label>
+
+          <label>
+            Image URL
+            <input id="url" type="url" placeholder="https://example.com/photo.jpg" required />
+          </label>
+
+          <button type="submit">Upload Image URL</button>
+        </form>
+
+        <p id="message" class="message" aria-live="polite"></p>
+      </section>
+
+      <section class="card">
+        <div class="gallery-head">
+          <h2>Gallery</h2>
+          <span id="count" class="count-pill">0 images</span>
+        </div>
+        <div id="gallery" class="gallery-grid"></div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Newsletter Subscription</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <section class="panel">
+        <h1>Newsletter Subscription</h1>
+        <p class="sub">Stay updated with new posts and product news.</p>
+
+        <form id="subscribeForm" class="form" novalidate>
+          <label for="email">Email Address</label>
+          <input id="email" type="email" placeholder="you@example.com" required />
+          <button type="submit">Subscribe</button>
+          <p id="message" class="message" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="list-head">
+          <h2>Subscribers</h2>
+          <span id="count" class="pill">0</span>
+        </div>
+        <div id="subscriberList" class="list"></div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

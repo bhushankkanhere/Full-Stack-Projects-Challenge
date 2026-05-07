@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Review Platform</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Product Review Platform</h1>
+
+      <section class="card">
+        <h2>Add Product</h2>
+        <form id="productForm" class="form-grid">
+          <label>
+            Product Name
+            <input id="productName" type="text" placeholder="e.g. Wireless Mouse" required />
+          </label>
+          <button type="submit">Add Product</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Add Review</h2>
+        <form id="reviewForm" class="form-grid">
+          <label>
+            Select Product
+            <select id="productSelect" required>
+              <option value="">Choose product</option>
+            </select>
+          </label>
+
+          <div class="rating-wrap">
+            <p class="field-label">Rating</p>
+            <div id="starRating" class="star-rating" aria-label="Select rating">
+              <button type="button" class="star" data-value="1">★</button>
+              <button type="button" class="star" data-value="2">★</button>
+              <button type="button" class="star" data-value="3">★</button>
+              <button type="button" class="star" data-value="4">★</button>
+              <button type="button" class="star" data-value="5">★</button>
+            </div>
+            <input id="ratingValue" type="hidden" value="0" />
+          </div>
+
+          <label>
+            Comment
+            <textarea id="comment" rows="4" placeholder="Write your review..." required></textarea>
+          </label>
+
+          <button type="submit">Submit Review</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>All Reviews</h2>
+        <div id="reviewList"></div>
+      </section>
+
+      <p id="message" class="message" aria-live="polite"></p>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

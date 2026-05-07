@@ -1,0 +1,151 @@
+:root {
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --border: #dbe3ef;
+  --ok: #17803d;
+  --error: #cc3737;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, #ebf2ff 0%, var(--bg) 56%, #f2f5fa 100%);
+}
+
+.container {
+  max-width: 860px;
+  margin: 2rem auto;
+  padding: 0 1rem 1.5rem;
+}
+
+h1,
+h2 {
+  margin: 0 0 0.9rem;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.form-stack label {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+input,
+button {
+  width: 100%;
+  font: inherit;
+}
+
+input {
+  margin-top: 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.68rem;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 0.72rem;
+  color: #fff;
+  background: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.6rem;
+}
+
+button:hover {
+  background: var(--primary-dark);
+}
+
+button.secondary {
+  background: #5b6476;
+}
+
+button.secondary:hover {
+  background: #4a5160;
+}
+
+.poll-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.9rem;
+  margin-bottom: 0.8rem;
+}
+
+.poll-card:last-child {
+  margin-bottom: 0;
+}
+
+.option-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.vote-btn {
+  width: auto;
+  margin-top: 0;
+  padding: 0.35rem 0.68rem;
+  font-size: 0.86rem;
+}
+
+.option-text {
+  font-weight: 600;
+}
+
+.option-votes {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.message {
+  min-height: 1.2rem;
+  margin: 0.25rem 0 0;
+}
+
+.message.success {
+  color: var(--ok);
+}
+
+.message.error {
+  color: var(--error);
+}
+
+.empty {
+  margin: 0;
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  .container {
+    margin-top: 1rem;
+  }
+
+  .option-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

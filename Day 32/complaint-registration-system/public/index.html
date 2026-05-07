@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complaint Registration System</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Complaint Registration System</h1>
+
+      <form id="complaintForm" class="entry-form">
+        <label>
+          Name
+          <input type="text" id="name" placeholder="Enter your name" required />
+        </label>
+
+        <label>
+          Issue
+          <textarea id="issue" rows="4" placeholder="Describe your complaint" required></textarea>
+        </label>
+
+        <button type="submit">Register Complaint</button>
+      </form>
+
+      <section class="entries-section">
+        <h2>Admin View</h2>
+        <div id="complaints" class="entries-list"></div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

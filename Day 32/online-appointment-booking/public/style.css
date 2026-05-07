@@ -1,0 +1,195 @@
+:root {
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #677589;
+  --primary: #1f67d5;
+  --primary-dark: #1751b0;
+  --danger: #cb3d3d;
+  --border: #d9e3ef;
+  --ok: #1f8c4f;
+  --error: #c63636;
+  --calendar: #edf3ff;
+  --calendar-active: #d6e6ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, #eaf2ff 0%, var(--bg) 52%, #eef2f8 100%);
+}
+
+.container {
+  max-width: 980px;
+  margin: 1.5rem auto;
+  padding: 0 1rem 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+h1,
+h2 {
+  margin: 0 0 0.85rem;
+}
+
+.subtitle {
+  margin: 0 0 0.9rem;
+  color: var(--muted);
+}
+
+.form-grid label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+input,
+button {
+  width: 100%;
+  font: inherit;
+}
+
+input {
+  margin-top: 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.68rem;
+  background: #fff;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 0.72rem;
+  color: #fff;
+  background: var(--primary);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--primary-dark);
+}
+
+.head-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.count-pill {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  color: var(--muted);
+  font-size: 0.86rem;
+  background: #f5f8fd;
+}
+
+.calendar-grid {
+  margin: 0.9rem 0;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.45rem;
+}
+
+.calendar-day {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--calendar);
+  padding: 0.5rem 0.25rem;
+  text-align: center;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.calendar-day.has-appointment {
+  background: var(--calendar-active);
+  border-color: #b5cefa;
+  color: #20467f;
+  font-weight: 700;
+}
+
+.appointment-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem;
+  margin-bottom: 0.7rem;
+}
+
+.appointment-card:last-child {
+  margin-bottom: 0;
+}
+
+.appointment-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.meta {
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.cancel-btn {
+  width: auto;
+  background: var(--danger);
+  padding: 0.38rem 0.65rem;
+  font-size: 0.84rem;
+}
+
+.cancel-btn:hover {
+  background: #b33232;
+}
+
+.empty {
+  margin: 0;
+  color: var(--muted);
+}
+
+.message {
+  min-height: 1.1rem;
+  margin: 0.65rem 0 0;
+}
+
+.message.success {
+  color: var(--ok);
+}
+
+.message.error {
+  color: var(--error);
+}
+
+@media (max-width: 700px) {
+  .calendar-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .calendar-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .appointment-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

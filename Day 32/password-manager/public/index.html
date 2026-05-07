@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Password Manager</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="app-wrap">
+      <section class="card">
+        <h1>Password Manager</h1>
+        <p class="subtitle">Save website login details safely for learning purposes.</p>
+
+        <form id="passwordForm" class="form-grid" autocomplete="off">
+          <label>
+            Site
+            <input id="site" type="text" placeholder="example.com" required />
+          </label>
+
+          <label>
+            Username
+            <input id="username" type="text" placeholder="john.doe" required />
+          </label>
+
+          <label>
+            Password
+            <input id="password" type="password" placeholder="Enter password" required minlength="4" />
+          </label>
+
+          <button type="submit">Save Password</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="list-header">
+          <h2>Saved Passwords</h2>
+          <span id="entryCount" class="count-pill">0 entries</span>
+        </div>
+        <div id="passwordList" class="list"></div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
