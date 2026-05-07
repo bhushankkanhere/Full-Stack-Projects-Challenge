@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meal Plan & Recipe Organizer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="main-header">
+    <h1>Meal Plan & Recipe Organizer</h1>
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="recipes">Recipes</button>
+      <button class="tab-btn" data-tab="planner">Weekly Planner</button>
+      <button class="tab-btn" data-tab="shopping">Shopping List</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- RECIPES TAB -->
+    <section id="recipes" class="tab-content active">
+      <div class="toolbar">
+        <div class="search-box">
+          <input type="text" id="searchRecipes" placeholder="Search recipes or ingredients..." aria-label="Search recipes">
+        </div>
+        <div class="filters">
+          <select id="categoryFilter" aria-label="Filter by category">
+            <option value="">All Categories</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner">Dinner</option>
+            <option value="Snack">Snack</option>
+            <option value="Dessert">Dessert</option>
+            <option value="Other">Other</option>
+          </select>
+          <select id="sortBy" aria-label="Sort recipes">
+            <option value="newest">Newest First</option>
+            <option value="rating">Highest Rated</option>
+            <option value="cookTime">Cook Time (Short)</option>
+            <option value="title">Title A-Z</option>
+          </select>
+        </div>
+        <button id="addRecipeBtn" class="btn btn-primary" aria-label="Add new recipe">+ Add Recipe</button>
+      </div>
+      <div id="recipeList" class="recipe-grid"></div>
+    </section>
+
+    <!-- WEEKLY PLANNER TAB -->
+    <section id="planner" class="tab-content">
+      <div class="toolbar">
+        <h2>Weekly Meal Planner</h2>
+        <button id="savePlanBtn" class="btn btn-primary">Save Plan</button>
+      </div>
+      <div class="meal-planner" id="mealPlanner"></div>
+    </section>
+
+    <!-- SHOPPING LIST TAB -->
+    <section id="shopping" class="tab-content">
+      <div class="toolbar">
+        <h2>Shopping List</h2>
+        <button id="generateShoppingBtn" class="btn btn-primary">Generate from Planner</button>
+      </div>
+      <div class="shopping-list" id="shoppingList">
+        <p class="empty-state">Click "Generate from Planner" to create your shopping list</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ADD/EDIT RECIPE MODAL -->
+  <div id="recipeModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add Recipe</h2>
+        <button class="close-btn" id="closeModal" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="recipeForm" novalidate>
+        <input type="hidden" id="recipeId">
+        <div class="form-group">
+          <label for="recipeTitle">Recipe Title *</label>
+          <input type="text" id="recipeTitle" required minlength="2" placeholder="e.g., Chicken Stir Fry">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="recipeCookTime">Cook Time (minutes)</label>
+            <input type="number" id="recipeCookTime" min="0" placeholder="30">
+          </div>
+          <div class="form-group">
+            <label for="recipeServings">Servings</label>
+            <input type="number" id="recipeServings" min="1" placeholder="4">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="recipeCategory">Category</label>
+          <select id="recipeCategory">
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner" selected>Dinner</option>
+            <option value="Snack">Snack</option>
+            <option value="Dessert">Dessert</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="recipeIngredients">Ingredients * (one per line)</label>
+          <textarea id="recipeIngredients" rows="5" required placeholder="2 cups rice&#10;1 lb chicken breast&#10;1 onion, diced"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="recipeSteps">Steps * (one per line)</label>
+          <textarea id="recipeSteps" rows="6" required placeholder="1. Cook rice according to package&#10;2. Cut chicken into pieces&#10;3. Stir fry until golden"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="recipeRating">Rating</label>
+          <div class="star-rating" id="starRating">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+          </div>
+          <input type="hidden" id="recipeRating" value="0">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Save Recipe</button>
+          <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MEAL SLOT MODAL -->
+  <div id="mealModal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-content modal-sm">
+      <div class="modal-header">
+        <h2 id="mealSlotTitle">Select Recipe</h2>
+        <button class="close-btn" id="closeMealModal" aria-label="Close">&times;</button>
+      </div>
+      <div id="mealRecipeList" class="meal-recipe-list"></div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Snippet Manager</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Consolas', 'Courier New', monospace; background: #1e1e1e; color: #d4d4d4; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        header { background: #2d2d30; padding: 20px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { color: #569cd6; }
+        .grid { display: grid; grid-template-columns: 350px 1fr; gap: 20px; }
+        .panel { background: #252526; border-radius: 8px; padding: 20px; }
+        .panel h2 { color: #dcdcaa; margin-bottom: 15px; }
+        form { display: flex; flex-direction: column; gap: 10px; }
+        input, select, textarea { padding: 10px; background: #3c3c3c; border: 1px solid #555; color: #d4d4d4; border-radius: 4px; font-family: inherit; }
+        textarea { min-height: 120px; resize: vertical; }
+        button { padding: 10px 20px; background: #0e639c; color: white; border: none; border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #1177bb; }
+        .search-box { display: flex; gap: 10px; margin-bottom: 15px; }
+        .search-box input { flex: 1; }
+        .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+        .tag { background: #0e639c; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; }
+        .snippet-list { max-height: 600px; overflow-y: auto; }
+        .snippet-item { background: #2d2d30; border-radius: 8px; margin-bottom: 15px; overflow: hidden; }
+        .snippet-header { padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .snippet-header h3 { color: #dcdcaa; }
+        .snippet-meta { display: flex; gap: 10px; align-items: center; margin-top: 5px; }
+        .lang-badge { background: #569cd6; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; }
+        .code-block { background: #1e1e1e; padding: 15px; overflow-x: auto; position: relative; border-top: 1px solid #444; }
+        .code-block pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; }
+        .copy-btn { position: absolute; top: 10px; right: 10px; background: #444; padding: 5px 10px; font-size: 0.8rem; }
+        .delete-btn { background: #c75450; padding: 5px 10px; font-size: 0.8rem; }
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; }
+        .function { color: #dcdcaa; }
+        .number { color: #b5cea8; }
+        .empty-state { text-align: center; padding: 40px; color: #888; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 Code Snippet Manager</h1>
+            <span id="snippetCount" style="color: #888;">0 snippets</span>
+        </header>
+
+        <div class="grid">
+            <div class="panel">
+                <h2>Add Snippet</h2>
+                <form id="snippetForm">
+                    <input type="text" id="title" placeholder="Snippet title" required>
+                    <select id="language" required>
+                        <option value="">Select Language</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="java">Java</option>
+                        <option value="cpp">C++</option>
+                        <option value="sql">SQL</option>
+                        <option value="bash">Bash</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <textarea id="code" placeholder="Paste your code here..." required></textarea>
+                    <input type="text" id="tags" placeholder="Tags (comma separated)">
+                    <button type="submit">Save Snippet</button>
+                </form>
+            </div>
+
+            <div class="panel">
+                <h2>My Snippets</h2>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search snippets...">
+                    <input type="text" id="tagFilter" placeholder="Filter by tag">
+                </div>
+                <div class="snippet-list" id="snippetList">
+                    <div class="empty-state">No snippets yet. Add your first snippet!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const langColors = {
+            javascript: '#f7df1e', python: '#3776ab', html: '#e34f26',
+            css: '#1572b6', java: '#b07219', cpp: '#00599c',
+            sql: '#e38c00', bash: '#4eaa25', other: '#888'
+        };
+
+        async function loadSnippets() {
+            const res = await fetch('/api/snippets');
+            const snippets = await res.json();
+            document.getElementById('snippetCount').textContent = `${snippets.length} snippets`;
+            
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const tagFilter = document.getElementById('tagFilter').value.toLowerCase();
+            
+            const filtered = snippets.filter(s => {
+                const matchSearch = !search || s.title.toLowerCase().includes(search) || s.code.toLowerCase().includes(search);
+                const matchTag = !tagFilter || (s.tags && s.tags.some(t => t.toLowerCase().includes(tagFilter)));
+                return matchSearch && matchTag;
+            });
+
+            const list = document.getElementById('snippetList');
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="empty-state">No snippets found.</div>';
+                return;
+            }
+
+            list.innerHTML = filtered.reverse().map(s => `
+                <div class="snippet-item">
+                    <div class="snippet-header" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">
+                        <div>
+                            <h3>${s.title}</h3>
+                            <div class="snippet-meta">
+                                <span class="lang-badge" style="background: ${langColors[s.language] || '#888'}">${s.language}</span>
+                                <span style="color: #888; font-size: 0.8rem;">${new Date(s.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            ${s.tags && s.tags.length ? `<div class="tags">${s.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
+                        </div>
+                        <button class="delete-btn" onclick="event.stopPropagation(); deleteSnippet('${s.id}')">Delete</button>
+                    </div>
+                    <div class="code-block" style="display: none;">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre>${highlightCode(s.code, s.language)}</pre>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function highlightCode(code, lang) {
+            code = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            code = code.replace(/(\/\/.*$)/gm, '<span class="comment">$1</span>');
+            code = code.replace(/(#.*$)/gm, '<span class="comment">$1</span>');
+            code = code.replace(/("(?:[^"\\]|\\.)*")/g, '<span class="string">$1</span>');
+            code = code.replace(/('(?:[^'\\]|\\.)*')/g, '<span class="string">$1</span>');
+            code = code.replace(/\b(const|let|var|function|return|if|else|for|while|class|import|from|def|print|public|private|static|void|int|string)\b/g, '<span class="keyword">$1</span>');
+            code = code.replace(/\b(\d+\.?\d*)\b/g, '<span class="number">$1</span>');
+            code = code.replace(/\b([a-zA-Z_]\w*)\s*\(/g, '<span class="function">$1</span>(');
+            return code;
+        }
+
+        function copyCode(btn) {
+            const code = btn.nextElementSibling.textContent;
+            navigator.clipboard.writeText(code);
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy', 2000);
+        }
+
+        async function deleteSnippet(id) {
+            await fetch(`/api/snippets/${id}`, { method: 'DELETE' });
+            loadSnippets();
+        }
+
+        document.getElementById('snippetForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const tags = document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t);
+            const data = {
+                title: document.getElementById('title').value,
+                language: document.getElementById('language').value,
+                code: document.getElementById('code').value,
+                tags
+            };
+            await fetch('/api/snippets', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            e.target.reset();
+            loadSnippets();
+        });
+
+        document.getElementById('searchInput').addEventListener('input', loadSnippets);
+        document.getElementById('tagFilter').addEventListener('input', loadSnippets);
+
+        loadSnippets();
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "documents": [
+    {
+      "id": "1",
+      "title": "Welcome to Markdown Editor",
+      "content": "# Welcome to Markdown Editor!\n\nThis is a **live preview** markdown editor. Start typing on the left, and see the rendered HTML on the right.\n\n## Features\n\n- Real-time preview\n- Dark/Light theme toggle\n- Toolbar for quick formatting\n- Export as .md file\n- Save documents\n\n## Markdown Examples\n\n### Text Formatting\n\nYou can write **bold text**, *italic text*, or ~~strikethrough~~.\n\n### Code\n\nInline `code` looks like this.\n\n```\n// Code blocks too!\nfunction hello() {\n  console.log('Hello World');\n}\n```\n\n### Links and Images\n\n[Visit Example](https://example.com)\n\n> This is a blockquote. It stands out from the regular text.\n\n---\n\nEnjoy writing!",
+      "createdAt": "2026-04-12T00:00:00.000Z",
+      "updatedAt": "2026-04-12T00:00:00.000Z"
+    }
+  ]
+}

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Editor & Previewer</title>
+  <style>
+    :root {
+      --bg: #ffffff; --bg-secondary: #f5f7fa; --text: #1a1a2e; --text-secondary: #555;
+      --border: #e0e0e0; --accent: #6366f1; --accent-hover: #4f46e5; --shadow: 0 2px 8px rgba(0,0,0,0.1);
+      --editor-bg: #fafafa; --preview-bg: #fff; --sidebar-bg: #f8f9fa; --success: #10b981;
+      --danger: #ef4444; --toolbar-bg: #fff;
+    }
+    [data-theme="dark"] {
+      --bg: #1a1a2e; --bg-secondary: #16213e; --text: #e0e0e0; --text-secondary: #aaa;
+      --border: #2d3748; --accent: #818cf8; --accent-hover: #6366f1; --shadow: 0 2px 8px rgba(0,0,0,0.3);
+      --editor-bg: #1e293b; --preview-bg: #16213e; --sidebar-bg: #111827; --toolbar-bg: #1e293b;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; }
+    .header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: var(--toolbar-bg); border-bottom: 1px solid var(--border); box-shadow: var(--shadow); }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .logo { font-size: 20px; font-weight: 700; color: var(--accent); }
+    .doc-select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-secondary); color: var(--text); min-width: 200px; font-size: 14px; }
+    .header-right { display: flex; gap: 10px; align-items: center; }
+    .btn { padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: var(--bg-secondary); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { opacity: 0.9; }
+    .toolbar { display: flex; gap: 6px; padding: 10px 24px; background: var(--toolbar-bg); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .toolbar-btn { padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); cursor: pointer; font-size: 13px; transition: all 0.2s; }
+    .toolbar-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .main { flex: 1; display: flex; overflow: hidden; }
+    .editor-pane, .preview-pane { flex: 1; display: flex; flex-direction: column; }
+    .editor-pane { border-right: 1px solid var(--border); }
+    .pane-header { padding: 12px 20px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); font-weight: 600; font-size: 14px; color: var(--text-secondary); }
+    .editor { flex: 1; width: 100%; padding: 20px; border: none; outline: none; resize: none; font-family: 'Consolas', 'Monaco', monospace; font-size: 15px; line-height: 1.7; background: var(--editor-bg); color: var(--text); }
+    .preview { flex: 1; padding: 20px 24px; overflow-y: auto; background: var(--preview-bg); }
+    .preview h1, .preview h2, .preview h3, .preview h4 { margin: 16px 0 8px; color: var(--accent); }
+    .preview h1 { font-size: 2em; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
+    .preview h2 { font-size: 1.5em; }
+    .preview h3 { font-size: 1.25em; }
+    .preview p { margin: 10px 0; line-height: 1.7; }
+    .preview strong { font-weight: 700; }
+    .preview em { font-style: italic; }
+    .preview ul, .preview ol { margin: 10px 0 10px 24px; }
+    .preview li { margin: 4px 0; }
+    .preview code { background: var(--bg-secondary); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    .preview pre { background: var(--bg-secondary); padding: 16px; border-radius: 8px; overflow-x: auto; margin: 12px 0; }
+    .preview pre code { background: none; padding: 0; }
+    .preview blockquote { border-left: 4px solid var(--accent); padding: 10px 16px; margin: 12px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
+    .preview a { color: var(--accent); text-decoration: underline; }
+    .preview hr { border: none; border-top: 2px solid var(--border); margin: 20px 0; }
+    .preview img { max-width: 100%; border-radius: 8px; margin: 10px 0; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--bg); padding: 24px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: var(--shadow); }
+    .modal-content h3 { margin-bottom: 16px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 14px; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-secondary); color: var(--text); font-size: 14px; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+    .theme-toggle { background: none; border: none; font-size: 20px; cursor: pointer; padding: 4px; }
+    @media (max-width: 768px) {
+      .main { flex-direction: column; }
+      .editor-pane { border-right: none; border-bottom: 1px solid var(--border); }
+      .header { flex-direction: column; gap: 10px; }
+      .doc-select { min-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">MD Editor</div>
+      <select class="doc-select" id="docSelect"></select>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-secondary" onclick="newDoc()">+ New</button>
+      <button class="btn btn-success" onclick="exportDoc()">Export</button>
+      <button class="btn btn-danger" onclick="deleteDoc()">Delete</button>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+  </div>
+  <div class="toolbar">
+    <button class="toolbar-btn" onclick="insertMd('# ', '')">H1</button>
+    <button class="toolbar-btn" onclick="insertMd('## ', '')">H2</button>
+    <button class="toolbar-btn" onclick="insertMd('### ', '')">H3</button>
+    <button class="toolbar-btn" onclick="insertMd('**', '**')">Bold</button>
+    <button class="toolbar-btn" onclick="insertMd('*', '*')">Italic</button>
+    <button class="toolbar-btn" onclick="insertMd('~~', '~~')">Strikethrough</button>
+    <button class="toolbar-btn" onclick="insertMd('- ', '')">List</button>
+    <button class="toolbar-btn" onclick="insertMd('1. ', '')">Numbered</button>
+    <button class="toolbar-btn" onclick="insertMd('> ', '')">Quote</button>
+    <button class="toolbar-btn" onclick="insertMd('```\n', '\n```')">Code</button>
+    <button class="toolbar-btn" onclick="insertMd('`', '`')">Inline Code</button>
+    <button class="toolbar-btn" onclick="insertMd('[', '](url)')">Link</button>
+    <button class="toolbar-btn" onclick="insertMd('![alt](', ')')">Image</button>
+    <button class="toolbar-btn" onclick="insertMd('\n---\n', '')">HR</button>
+  </div>
+  <div class="main">
+    <div class="editor-pane">
+      <div class="pane-header">Editor</div>
+      <textarea class="editor" id="editor" placeholder="Start writing in Markdown..."></textarea>
+    </div>
+    <div class="preview-pane">
+      <div class="pane-header">Preview</div>
+      <div class="preview" id="preview"></div>
+    </div>
+  </div>
+  <div class="modal" id="newDocModal">
+    <div class="modal-content">
+      <h3>New Document</h3>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="docTitle" placeholder="Document title">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="createDoc()">Create</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    let currentDocId = null;
+    const API = '/api/documents';
+    const editor = document.getElementById('editor');
+    const preview = document.getElementById('preview');
+
+    async function loadDocuments() {
+      const res = await fetch(API);
+      const docs = await res.json();
+      const select = document.getElementById('docSelect');
+      select.innerHTML = '<option value="">Select or create a document</option>';
+      docs.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.textContent = `${d.title} (${new Date(d.updatedAt).toLocaleDateString()})`;
+        select.appendChild(opt);
+      });
+      if (docs.length > 0 && !currentDocId) {
+        select.value = docs[0].id;
+        await loadDoc(docs[0].id);
+      }
+    }
+
+    async function loadDoc(id) {
+      const res = await fetch(`${API}/${id}`);
+      const doc = await res.json();
+      currentDocId = doc.id;
+      editor.value = doc.content;
+      renderPreview(doc.content);
+    }
+
+    function renderPreview(md) {
+      let html = md
+        .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+        .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/~~(.+?)~~/g, '<del>$1</del>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+        .replace(/^- (.+)$/gm, '<li>$1</li>')
+        .replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
+        .replace(/^---$/gm, '<hr>')
+        .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+        .replace(/\n/g, '<br>');
+      html = html.replace(/(<li>.*?<\/li>)/gs, (m) => `<ul>${m}</ul>`);
+      html = html.replace(/<\/ul><ul>/g, '');
+      preview.innerHTML = html;
+    }
+
+    async function saveDoc() {
+      if (!currentDocId) return;
+      await fetch(`${API}/${currentDocId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: editor.value })
+      });
+      loadDocuments();
+    }
+
+    async function newDoc() {
+      document.getElementById('newDocModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('newDocModal').classList.remove('active');
+    }
+
+    async function createDoc() {
+      const title = document.getElementById('docTitle').value || 'Untitled';
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content: '' })
+      });
+      const doc = await res.json();
+      currentDocId = doc.id;
+      editor.value = '';
+      renderPreview('');
+      closeModal();
+      loadDocuments();
+      document.getElementById('docSelect').value = doc.id;
+    }
+
+    async function deleteDoc() {
+      if (!currentDocId) return;
+      if (!confirm('Delete this document?')) return;
+      await fetch(`${API}/${currentDocId}`, { method: 'DELETE' });
+      currentDocId = null;
+      editor.value = '';
+      preview.innerHTML = '';
+      loadDocuments();
+    }
+
+    function exportDoc() {
+      if (!currentDocId || !editor.value) return;
+      const blob = new Blob([editor.value], { type: 'text/markdown' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${currentDocId}.md`;
+      a.click();
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+      document.getElementById('themeBtn').textContent = current === 'dark' ? '🌙' : '☀️';
+    }
+
+    function insertMd(before, after) {
+      const start = editor.selectionStart;
+      const end = editor.selectionEnd;
+      const text = editor.value;
+      const selected = text.substring(start, end);
+      editor.value = text.substring(0, start) + before + selected + after + text.substring(end);
+      editor.focus();
+      editor.selectionStart = start + before.length;
+      editor.selectionEnd = start + before.length + selected.length;
+      renderPreview(editor.value);
+      saveDoc();
+    }
+
+    editor.addEventListener('input', () => {
+      renderPreview(editor.value);
+      clearTimeout(editor._saveTimeout);
+      editor._saveTimeout = setTimeout(saveDoc, 500);
+    });
+
+    document.getElementById('docSelect').addEventListener('change', async (e) => {
+      if (e.target.value) await loadDoc(e.target.value);
+    });
+
+    loadDocuments();
+  </script>
+</body>
+</html>
