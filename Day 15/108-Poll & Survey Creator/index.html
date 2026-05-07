@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poll & Survey Creator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { text-align: center; color: white; margin-bottom: 30px; }
+        header h1 { font-size: 2.5rem; }
+        .btn { padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: 0.3s; }
+        .btn-primary { background: white; color: #ee5a24; font-weight: bold; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .create-form { background: white; padding: 30px; border-radius: 15px; margin-bottom: 30px; display: none; }
+        .create-form.active { display: block; }
+        .create-form input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; }
+        .option-row { display: flex; gap: 10px; margin: 8px 0; }
+        .option-row input { flex: 1; }
+        .polls-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); gap: 20px; }
+        .poll-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .poll-card h3 { color: #333; margin-bottom: 15px; }
+        .poll-card .meta { color: #666; font-size: 0.9rem; margin-bottom: 15px; }
+        .option-item { margin: 12px 0; }
+        .option-bar { display: flex; align-items: center; gap: 10px; }
+        .option-bar button { padding: 8px 15px; background: #ee5a24; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .progress-bar { flex: 1; background: #f0f0f0; height: 25px; border-radius: 12px; overflow: hidden; position: relative; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #ff6b6b, #ee5a24); transition: width 0.5s; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; color: white; font-size: 0.8rem; font-weight: bold; }
+        .delete-btn { margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Poll & Survey Creator</h1>
+            <p>Create polls and collect votes in real-time</p>
+            <button class="btn btn-primary" onclick="toggleForm()" style="margin-top: 15px;">+ Create New Poll</button>
+        </header>
+
+        <div class="create-form" id="createForm">
+            <h2>Create Poll</h2>
+            <form id="pollForm">
+                <input type="text" id="pollQuestion" placeholder="Your question" required>
+                <div id="optionsContainer">
+                    <div class="option-row"><input type="text" placeholder="Option 1" class="option-input" required></div>
+                    <div class="option-row"><input type="text" placeholder="Option 2" class="option-input" required></div>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="addOption()" style="margin: 10px 0;">+ Add Option</button>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="submit" class="btn btn-success">Create Poll</button>
+                    <button type="button" class="btn btn-danger" onclick="toggleForm()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="polls-grid" id="pollsGrid"></div>
+    </div>
+
+    <script>
+        let optionCount = 2;
+
+        function toggleForm() {
+            document.getElementById('createForm').classList.toggle('active');
+        }
+
+        function addOption() {
+            optionCount++;
+            const container = document.getElementById('optionsContainer');
+            const div = document.createElement('div');
+            div.className = 'option-row';
+            div.innerHTML = `<input type="text" placeholder="Option ${optionCount}" class="option-input" required>`;
+            container.appendChild(div);
+        }
+
+        async function loadPolls() {
+            const res = await fetch('/api/polls');
+            const polls = await res.json();
+            const grid = document.getElementById('pollsGrid');
+            
+            if (polls.length === 0) {
+                grid.innerHTML = '<div style="text-align:center;color:white;grid-column:1/-1;"><h2>No polls yet. Create your first poll!</h2></div>';
+                return;
+            }
+
+            grid.innerHTML = polls.reverse().map(p => `
+                <div class="poll-card">
+                    <h3>${p.question}</h3>
+                    <div class="meta">${p.totalVotes} votes • ${new Date(p.createdAt).toLocaleDateString()}</div>
+                    ${p.options.map(o => {
+                        const percent = p.totalVotes > 0 ? ((o.votes / p.totalVotes) * 100).toFixed(1) : 0;
+                        return `
+                            <div class="option-item">
+                                <div class="option-bar">
+                                    <button onclick="vote('${p.id}', '${o.text.replace(/'/g, "\\'")}')">Vote</button>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${percent}%">${percent}%</div>
+                                    </div>
+                                    <span style="min-width: 60px; text-align: right;">${o.votes} votes</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                    <button class="btn btn-danger delete-btn" onclick="deletePoll('${p.id}')">Delete Poll</button>
+                </div>
+            `).join('');
+        }
+
+        async function vote(pollId, option) {
+            await fetch(`/api/polls/${pollId}/vote`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ option })
+            });
+            loadPolls();
+        }
+
+        async function deletePoll(id) {
+            await fetch(`/api/polls/${id}`, { method: 'DELETE' });
+            loadPolls();
+        }
+
+        document.getElementById('pollForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const options = Array.from(document.querySelectorAll('.option-input')).map(i => ({ text: i.value, votes: 0 }));
+            
+            if (options.length < 2) {
+                alert('Please add at least 2 options');
+                return;
+            }
+
+            await fetch('/api/polls', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    question: document.getElementById('pollQuestion').value,
+                    options
+                })
+            });
+
+            e.target.reset();
+            optionCount = 2;
+            document.getElementById('optionsContainer').innerHTML = '<div class="option-row"><input type="text" placeholder="Option 1" class="option-input" required></div><div class="option-row"><input type="text" placeholder="Option 2" class="option-input" required></div>';
+            toggleForm();
+            loadPolls();
+        });
+
+        loadPolls();
+    </script>
+</body>
+</html>

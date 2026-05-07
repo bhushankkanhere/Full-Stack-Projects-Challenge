@@ -1,0 +1,33 @@
+{
+  "notes": [
+    {
+      "id": "1",
+      "title": "Sprint Planning - Q2",
+      "project": "Engineering",
+      "date": "2026-04-10",
+      "content": "Discussed priorities for Q2 sprint planning.\n\nKey decisions:\n- Focus on performance improvements\n- Launch new dashboard by May\n- Reduce technical debt\n\nAction items assigned to team members.",
+      "actionItems": [
+        { "text": "Create performance benchmarks", "done": true },
+        { "text": "Draft dashboard wireframes", "done": false },
+        { "text": "Schedule tech debt review", "done": false }
+      ],
+      "tags": ["planning", "meeting"],
+      "createdAt": "2026-04-10T00:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "title": "Marketing Strategy Brainstorm",
+      "project": "Marketing",
+      "date": "2026-04-08",
+      "content": "Brainstormed ideas for Q2 marketing campaign.\n\nFocus areas:\n- Social media expansion\n- Influencer partnerships\n- Content marketing push",
+      "actionItems": [
+        { "text": "Research influencer candidates", "done": false },
+        { "text": "Prepare budget proposal", "done": false }
+      ],
+      "tags": ["brainstorm", "meeting"],
+      "createdAt": "2026-04-08T00:00:00.000Z"
+    }
+  ],
+  "projects": ["Engineering", "Marketing", "Product", "General"],
+  "tags": ["meeting", "brainstorm", "planning", "retrospective", "1-on-1"]
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>📇 Contact Management System</h1>
+            <p class="subtitle">Manage your contacts efficiently</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Left Section: Form -->
+            <section class="form-section">
+                <div class="form-container">
+                    <h2>Add/Edit Contact</h2>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" placeholder="Enter full name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" placeholder="Enter email address">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" placeholder="Enter phone number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <textarea id="address" placeholder="Enter address" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-buttons">
+                            <button type="submit" id="addBtn" class="btn btn-primary">Add Contact</button>
+                            <button type="button" id="clearBtn" class="btn btn-secondary">Clear</button>
+                            <button type="button" id="cancelBtn" class="btn btn-cancel" style="display: none;">Cancel Edit</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Right Section: Contacts List -->
+            <section class="list-section">
+                <div class="list-container">
+                    <div class="list-header">
+                        <h2>Your Contacts</h2>
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="🔍 Search contacts...">
+                            <span id="contactCount" class="contact-count">0 contacts</span>
+                        </div>
+                    </div>
+
+                    <div id="contactsList" class="contacts-list">
+                        <p class="empty-message">No contacts yet. Add one to get started!</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2026 Contact Management System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

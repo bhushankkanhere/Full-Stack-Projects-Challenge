@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Hotel Booking System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero-section">
+      <div class="hero-copy">
+        <span class="hero-badge">Luxury stays</span>
+        <h1>Book your perfect hotel stay online</h1>
+        <p>Search rooms, compare amenities, reserve instantly, and manage your trip with a responsive hotel booking experience.</p>
+      </div>
+      <button id="view-rooms-btn" class="primary">Explore Rooms</button>
+    </header>
+
+    <main class="container">
+      <section class="search-card">
+        <div class="search-grid">
+          <div class="search-field">
+            <label for="checkin">Check-in</label>
+            <input type="date" id="checkin" required>
+          </div>
+          <div class="search-field">
+            <label for="checkout">Check-out</label>
+            <input type="date" id="checkout" required>
+          </div>
+          <div class="search-field">
+            <label for="guests">Guests</label>
+            <select id="guests">
+              <option value="1">1 Guest</option>
+              <option value="2">2 Guests</option>
+              <option value="3">3 Guests</option>
+              <option value="4">4 Guests</option>
+            </select>
+          </div>
+          <div class="search-field search-button-wrap">
+            <button id="search-btn" class="secondary full-width">Search Rooms</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="rooms-section">
+        <div class="section-header">
+          <h2>Available Rooms</h2>
+          <p>Find the best room for your stay, including breakfast, free Wi-Fi, and flexible cancellation.</p>
+        </div>
+        <div id="room-grid" class="room-grid"></div>
+      </section>
+    </main>
+
+    <aside id="booking-sidebar" class="booking-sidebar hidden">
+      <div class="sidebar-header">
+        <h3>Your Booking</h3>
+        <button id="sidebar-close" class="close-btn">×</button>
+      </div>
+      <div id="booking-details" class="booking-details"></div>
+      <div class="booking-summary">
+        <div class="summary-row">
+          <span>Room total</span>
+          <strong id="room-total">$0.00</strong>
+        </div>
+        <div class="summary-row">
+          <span>Taxes & fees</span>
+          <strong>$15.00</strong>
+        </div>
+        <div class="summary-row total-row">
+          <span>Total</span>
+          <strong id="booking-total">$0.00</strong>
+        </div>
+      </div>
+      <button id="reserve-btn" class="primary full-width" disabled>Reserve Now</button>
+      <div id="reserve-message" class="reserve-message hidden"></div>
+    </aside>
+
+    <div id="guest-modal" class="modal hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Confirm Booking</h3>
+          <button id="modal-close" class="close-btn">×</button>
+        </div>
+        <form id="booking-form" class="booking-form">
+          <div class="form-group">
+            <label for="full-name">Full Name</label>
+            <input id="full-name" type="text" placeholder="Enter your name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input id="phone" type="tel" placeholder="(123) 456-7890" required>
+          </div>
+          <button type="submit" class="primary full-width">Confirm Reservation</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
