@@ -1,0 +1,29 @@
+{
+  "images": [
+    {
+      "id": "1",
+      "url": "https://picsum.photos/seed/nature1/400/300",
+      "title": "Mountain Sunrise",
+      "album": "Nature",
+      "tags": ["mountain", "sunrise", "landscape"],
+      "createdAt": "2026-04-12T00:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "url": "https://picsum.photos/seed/arch1/400/300",
+      "title": "Modern Building",
+      "album": "Architecture",
+      "tags": ["building", "modern", "city"],
+      "createdAt": "2026-04-12T00:00:00.000Z"
+    },
+    {
+      "id": "3",
+      "url": "https://picsum.photos/seed/abstract1/400/300",
+      "title": "Color Waves",
+      "album": "Abstract",
+      "tags": ["abstract", "colors", "waves"],
+      "createdAt": "2026-04-12T00:00:00.000Z"
+    }
+  ],
+  "albums": ["Nature", "Architecture", "Abstract"]
+}

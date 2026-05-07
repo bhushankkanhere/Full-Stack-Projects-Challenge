@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener Service</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 15px; margin-bottom: 30px; text-align: center; }
+        header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .shortener-box { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        .input-group input { flex: 1; padding: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; }
+        .input-group input:focus { border-color: #667eea; outline: none; }
+        .btn { padding: 15px 30px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: 0.3s; }
+        .btn:hover { background: #764ba2; }
+        .result { background: #f8f9fa; padding: 20px; border-radius: 10px; display: none; }
+        .result.active { display: block; }
+        .result .short-url { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
+        .result .short-url input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .copy-btn { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .stat-card h3 { font-size: 2rem; color: #667eea; }
+        .stat-card p { color: #666; margin-top: 5px; }
+        .links-list { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .links-list h2 { margin-bottom: 15px; }
+        .link-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .link-item:last-child { border-bottom: none; }
+        .link-info { flex: 1; }
+        .link-info .short { color: #667eea; font-weight: bold; }
+        .link-info .original { color: #666; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 400px; }
+        .link-stats { display: flex; gap: 20px; align-items: center; }
+        .link-stats span { color: #666; font-size: 0.9rem; }
+        .delete-btn { background: #e74c3c; padding: 8px 15px; border: none; border-radius: 5px; color: white; cursor: pointer; }
+        .qr-placeholder { width: 80px; height: 80px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.7rem; color: #666; text-align: center; }
+        .empty-state { text-align: center; padding: 40px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔗 URL Shortener Service</h1>
+            <p>Shorten your long URLs into manageable links</p>
+        </header>
+
+        <div class="shortener-box">
+            <h2>Shorten Your URL</h2>
+            <div class="input-group">
+                <input type="url" id="urlInput" placeholder="Paste your long URL here..." required>
+                <button class="btn" onclick="shortenUrl()">Shorten</button>
+            </div>
+            <div class="result" id="result">
+                <p><strong>Your shortened URL:</strong></p>
+                <div class="short-url">
+                    <input type="text" id="shortUrl" readonly>
+                    <button class="copy-btn" onclick="copyUrl()">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <h3 id="totalLinks">0</h3>
+                <p>Total Links</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalClicks">0</h3>
+                <p>Total Clicks</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="avgClicks">0</h3>
+                <p>Avg Clicks/Link</p>
+            </div>
+        </div>
+
+        <div class="links-list">
+            <h2>Your Links</h2>
+            <div id="linksList">
+                <div class="empty-state">No shortened URLs yet. Create your first one above!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadLinks() {
+            const res = await fetch('/api/links');
+            const links = await res.json();
+            
+            const totalLinks = links.length;
+            const totalClicks = links.reduce((sum, l) => sum + l.clicks, 0);
+            const avgClicks = totalLinks > 0 ? (totalClicks / totalLinks).toFixed(1) : 0;
+            
+            document.getElementById('totalLinks').textContent = totalLinks;
+            document.getElementById('totalClicks').textContent = totalClicks;
+            document.getElementById('avgClicks').textContent = avgClicks;
+
+            const list = document.getElementById('linksList');
+            if (links.length === 0) {
+                list.innerHTML = '<div class="empty-state">No shortened URLs yet. Create your first one above!</div>';
+                return;
+            }
+
+            list.innerHTML = links.reverse().map(l => `
+                <div class="link-item">
+                    <div class="link-info">
+                        <div class="short">${l.shortUrl}</div>
+                        <div class="original" title="${l.originalUrl}">${l.originalUrl}</div>
+                        <div style="color: #999; font-size: 0.8rem; margin-top: 5px;">${new Date(l.createdAt).toLocaleDateString()}</div>
+                    </div>
+                    <div class="link-stats">
+                        <span>👆 ${l.clicks} clicks</span>
+                        <div class="qr-placeholder">QR<br>Code</div>
+                        <button class="delete-btn" onclick="deleteLink('${l.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function shortenUrl() {
+            const url = document.getElementById('urlInput').value.trim();
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+
+            const res = await fetch('/api/links', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ originalUrl: url })
+            });
+            const link = await res.json();
+            
+            document.getElementById('shortUrl').value = link.shortUrl;
+            document.getElementById('result').classList.add('active');
+            document.getElementById('urlInput').value = '';
+            loadLinks();
+        }
+
+        function copyUrl() {
+            const input = document.getElementById('shortUrl');
+            input.select();
+            document.execCommand('copy');
+            event.target.textContent = 'Copied!';
+            setTimeout(() => event.target.textContent = 'Copy', 2000);
+        }
+
+        async function deleteLink(id) {
+            await fetch(`/api/links/${id}`, { method: 'DELETE' });
+            loadLinks();
+        }
+
+        document.getElementById('urlInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') shortenUrl();
+        });
+
+        loadLinks();
+    </script>
+</body>
+</html>

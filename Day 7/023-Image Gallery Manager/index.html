@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Gallery Manager</title>
+  <style>
+    :root { --bg: #0f172a; --bg-card: #1e293b; --text: #f1f5f9; --text-secondary: #94a3b8; --accent: #3b82f6; --accent-hover: #2563eb; --border: #334155; --success: #22c55e; --danger: #ef4444; --shadow: 0 4px 16px rgba(0,0,0,0.3); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    .header { background: linear-gradient(135deg, #1e3a5f, #0f172a); padding: 24px; border-bottom: 1px solid var(--border); }
+    .header-content { max-width: 1400px; margin: 0 auto; }
+    .header h1 { font-size: 28px; background: linear-gradient(90deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; }
+    .controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .search-box { flex: 1; min-width: 200px; padding: 10px 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card); color: var(--text); font-size: 14px; }
+    .search-box::placeholder { color: var(--text-secondary); }
+    select, .btn { padding: 10px 16px; border-radius: 8px; font-size: 14px; }
+    select { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); }
+    .btn { border: none; cursor: pointer; font-weight: 500; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-success { background: var(--success); color: #fff; }
+    .main { max-width: 1400px; margin: 24px auto; padding: 0 24px; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .card { background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.2s; position: relative; }
+    .card:hover { transform: translateY(-4px); }
+    .card-img { width: 100%; height: 200px; object-fit: cover; cursor: pointer; background: #2d3748; }
+    .card-body { padding: 16px; }
+    .card-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .card-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .album-badge { background: rgba(59,130,246,0.2); color: #60a5fa; padding: 4px 10px; border-radius: 12px; font-size: 12px; }
+    .tag { background: rgba(139,92,246,0.2); color: #a78bfa; padding: 4px 10px; border-radius: 12px; font-size: 12px; }
+    .card-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .card-actions button { flex: 1; padding: 8px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
+    .btn-view { background: rgba(59,130,246,0.2); color: #60a5fa; }
+    .btn-delete { background: rgba(239,68,68,0.2); color: #ef4444; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--bg-card); padding: 28px; border-radius: 16px; width: 90%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
+    .modal-content h3 { margin-bottom: 20px; font-size: 20px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 14px; }
+    .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 14px; }
+    .form-group input:focus { outline: none; border-color: var(--accent); }
+    .tags-input { display: flex; gap: 8px; }
+    .tags-input input { flex: 1; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+    .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; flex-direction: column; }
+    .lightbox.active { display: flex; }
+    .lightbox img { max-width: 90%; max-height: 80vh; object-fit: contain; border-radius: 8px; }
+    .lightbox-close { position: absolute; top: 20px; right: 30px; font-size: 36px; color: #fff; cursor: pointer; background: none; border: none; }
+    .lightbox-title { color: #fff; margin-top: 16px; font-size: 18px; }
+    .empty { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
+    .empty svg { width: 80px; height: 80px; margin-bottom: 20px; opacity: 0.3; }
+    @media (max-width: 768px) { .gallery { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <h1>Image Gallery Manager</h1>
+      <div class="controls">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search images, tags, albums...">
+        <select id="albumFilter"><option value="">All Albums</option></select>
+        <button class="btn btn-primary" onclick="openAddModal()">+ Add Image</button>
+        <button class="btn btn-success" onclick="openAlbumModal()">+ New Album</button>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="gallery" id="gallery"></div>
+    <div class="empty" id="emptyState" style="display:none;">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+      <h2>No images yet</h2>
+      <p>Add your first image to get started!</p>
+    </div>
+  </div>
+  <div class="modal" id="addModal">
+    <div class="modal-content">
+      <h3>Add New Image</h3>
+      <div class="form-group"><label>Image URL</label><input type="url" id="imgUrl" placeholder="https://example.com/image.jpg"></div>
+      <div class="form-group"><label>Title</label><input type="text" id="imgTitle" placeholder="Image title"></div>
+      <div class="form-group"><label>Album</label><select id="imgAlbum"></select></div>
+      <div class="form-group"><label>Tags (comma separated)</label><input type="text" id="imgTags" placeholder="nature, landscape, sunset"></div>
+      <div class="modal-actions"><button class="btn" style="background:var(--border);color:var(--text)" onclick="closeModal('addModal')">Cancel</button><button class="btn btn-primary" onclick="addImage()">Add Image</button></div>
+    </div>
+  </div>
+  <div class="modal" id="albumModal">
+    <div class="modal-content">
+      <h3>Create New Album</h3>
+      <div class="form-group"><label>Album Name</label><input type="text" id="albumName" placeholder="e.g., Vacation Photos"></div>
+      <div class="modal-actions"><button class="btn" style="background:var(--border);color:var(--text)" onclick="closeModal('albumModal')">Cancel</button><button class="btn btn-primary" onclick="createAlbum()">Create Album</button></div>
+    </div>
+  </div>
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-title" id="lightboxTitle"></div>
+  </div>
+  <script>
+    let allImages = [];
+    const API = '/api';
+    async function loadAlbums() {
+      const res = await fetch(`${API}/albums`); const albums = await res.json();
+      ['albumFilter', 'imgAlbum'].forEach(id => {
+        const sel = document.getElementById(id);
+        const val = sel.value;
+        sel.innerHTML = id === 'albumFilter' ? '<option value="">All Albums</option>' : '<option value="">No Album</option>';
+        albums.forEach(a => { const o = document.createElement('option'); o.value = a; o.textContent = a; sel.appendChild(o); });
+        sel.value = val;
+      });
+    }
+    async function loadImages() {
+      const res = await fetch(`${API}/images`); allImages = await res.json(); renderImages(allImages);
+    }
+    function renderImages(images) {
+      const gallery = document.getElementById('gallery'); const empty = document.getElementById('emptyState');
+      if (images.length === 0) { gallery.innerHTML = ''; empty.style.display = 'block'; return; }
+      empty.style.display = 'none';
+      gallery.innerHTML = images.map(img => `
+        <div class="card">
+          <img class="card-img" src="${img.url}" alt="${img.title}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23334155%22 width=%22100%22 height=%22100%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22%2394a3b8%22 font-size=%2214%22>Image</text></svg>'" onclick="openLightbox('${img.url}', '${img.title}')">
+          <div class="card-body">
+            <div class="card-title">${img.title}</div>
+            <div class="card-meta">
+              ${img.album ? `<span class="album-badge">${img.album}</span>` : ''}
+              ${img.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+            </div>
+            <div class="card-actions"><button class="btn-view" onclick="openLightbox('${img.url}', '${img.title}')">View</button><button class="btn-delete" onclick="deleteImage('${img.id}')">Delete</button></div>
+          </div>
+        </div>`).join('');
+    }
+    async function addImage() {
+      const url = document.getElementById('imgUrl').value; const title = document.getElementById('imgTitle').value;
+      const album = document.getElementById('imgAlbum').value; const tags = document.getElementById('imgTags').value.split(',').map(t => t.trim()).filter(Boolean);
+      if (!url) return alert('Please enter an image URL');
+      await fetch(`${API}/images`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url, title, album, tags }) });
+      closeModal('addModal'); document.getElementById('imgUrl').value = ''; document.getElementById('imgTitle').value = ''; document.getElementById('imgTags').value = '';
+      loadImages();
+    }
+    async function deleteImage(id) {
+      if (!confirm('Delete this image?')) return;
+      await fetch(`${API}/images/${id}`, { method: 'DELETE' }); loadImages();
+    }
+    async function createAlbum() {
+      const name = document.getElementById('albumName').value.trim();
+      if (!name) return alert('Enter album name');
+      await fetch(`${API}/albums`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) });
+      closeModal('albumModal'); document.getElementById('albumName').value = '';
+      loadAlbums();
+    }
+    function openAddModal() { document.getElementById('addModal').classList.add('active'); loadAlbums(); }
+    function openAlbumModal() { document.getElementById('albumModal').classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function openLightbox(url, title) { document.getElementById('lightboxImg').src = url; document.getElementById('lightboxTitle').textContent = title; document.getElementById('lightbox').classList.add('active'); }
+    function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
+    const searchBox = document.getElementById('searchBox'); const albumFilter = document.getElementById('albumFilter');
+    searchBox.addEventListener('input', filterImages); albumFilter.addEventListener('change', filterImages);
+    function filterImages() {
+      const q = searchBox.value.toLowerCase(); const album = albumFilter.value;
+      const filtered = allImages.filter(i => (!q || i.title.toLowerCase().includes(q) || i.tags.some(t => t.toLowerCase().includes(q))) && (!album || i.album === album));
+      renderImages(filtered);
+    }
+    document.getElementById('lightbox').addEventListener('click', (e) => { if (e.target.id === 'lightbox') closeLightbox(); });
+    loadImages(); loadAlbums();
+  </script>
+</body>
+</html>
