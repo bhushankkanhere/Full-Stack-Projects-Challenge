@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Git Command Helper</title>
+  <style>
+    :root{--bg:#1e1e2e;--bg-card:#181825;--text:#cdd6f4;--text-secondary:#a6adc8;--accent:#89b4fa;--accent-hover:#74c7ec;--success:#a6e3a1;--border:#313244;--surface:#313244;--shadow:0 2px 12px rgba(0,0,0,0.3)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    .header{background:linear-gradient(135deg,#1e1e2e,#181825);padding:20px 24px;border-bottom:1px solid var(--border)}
+    .header h1{font-size:24px;color:var(--accent)}
+    .container{max-width:1200px;margin:20px auto;padding:0 20px;display:grid;grid-template-columns:300px 1fr;gap:20px}
+    .sidebar{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px;max-height:calc(100vh - 120px);overflow-y:auto}
+    .sidebar h3{font-size:14px;color:var(--text-secondary);margin-bottom:12px;text-transform:uppercase}
+    .workflow{padding:10px 12px;border-radius:8px;cursor:pointer;margin-bottom:4px;font-size:14px;transition:all .2s}
+    .workflow:hover,.workflow.active{background:var(--surface);color:var(--accent)}
+    .main{display:flex;flex-direction:column;gap:16px}
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px}
+    .card h3{margin-bottom:16px;color:var(--accent)}
+    .form-group{margin-bottom:14px}
+    .form-group label{display:block;font-size:13px;color:var(--text-secondary);margin-bottom:4px}
+    .form-group input,.form-group select{width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:14px}
+    .command-box{background:#11111b;border:1px solid var(--border);border-radius:10px;padding:16px;font-family:'Consolas',monospace;font-size:16px;display:flex;justify-content:space-between;align-items:center;margin:16px 0}
+    .command-box code{flex:1;word-break:break-all}
+    .btn{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-weight:500;font-size:14px;transition:all .2s}
+    .btn-primary{background:var(--accent);color:#1e1e2e}.btn-primary:hover{background:var(--accent-hover)}
+    .btn-secondary{background:var(--surface);color:var(--text)}.btn-success{background:var(--success);color:#1e1e2e}
+    .btn-sm{padding:6px 12px;font-size:13px}
+    .tabs{display:flex;gap:4px;margin-bottom:16px;background:var(--bg-card);border-radius:10px;padding:4px}
+    .tab{flex:1;padding:10px;border:none;background:none;border-radius:8px;cursor:pointer;font-size:14px;color:var(--text-secondary)}
+    .tab.active{background:var(--accent);color:#1e1e2e}
+    .panel{display:none}.panel.active{display:block}
+    .history-item{padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .history-item:last-child{border:none}
+    .history-cmd{font-family:monospace;font-size:13px;color:var(--success)}
+    .history-time{font-size:12px;color:var(--text-secondary)}
+    .saved-item{padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .toast{position:fixed;bottom:24px;right:24px;padding:12px 24px;border-radius:10px;background:var(--accent);color:#1e1e2e;font-weight:500;opacity:0;transition:opacity .3s;z-index:1000}
+    .toast.show{opacity:1}
+    @media(max-width:768px){.container{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="header"><h1>Git Command Helper</h1></div>
+  <div class="container">
+    <div class="sidebar">
+      <h3>Workflows</h3>
+      <div id="workflowList"></div>
+    </div>
+    <div class="main">
+      <div class="card" id="builderCard">
+        <h3 id="workflowTitle">Select a workflow</h3>
+        <div id="paramsContainer"></div>
+        <div style="margin-top:16px;display:flex;gap:10px">
+          <button class="btn btn-primary" onclick="generateCommand()">Generate Command</button>
+          <button class="btn btn-success" onclick="saveCommand()">Save</button>
+        </div>
+        <div class="command-box" id="commandBox" style="display:none">
+          <code id="commandOutput"></code>
+          <button class="btn btn-secondary btn-sm" onclick="copyCommand()">Copy</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="tabs">
+          <button class="tab active" onclick="switchTab('history')">History</button>
+          <button class="tab" onclick="switchTab('saved')">Saved Commands</button>
+        </div>
+        <div class="panel active" id="panel-history"><div id="historyList"></div></div>
+        <div class="panel" id="panel-saved"><div id="savedList"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast">Copied!</div>
+  <script>
+    let workflows=[],currentWorkflow=null,currentCommand='';
+    async function loadData(){workflows=await(await fetch('/api/workflows')).json();renderWorkflows();loadHistory();loadSaved();}
+    function renderWorkflows(){document.getElementById('workflowList').innerHTML=workflows.map(w=>`<div class="workflow${currentWorkflow===w?' active':''}" onclick="selectWorkflow('${w}')">${w}</div>`).join('');}
+    function selectWorkflow(w){currentWorkflow=w;document.getElementById('workflowTitle').textContent=w;renderWorkflows();renderParams(w);}
+    function renderParams(w){const c=document.getElementById('paramsContainer');const params=getParamsForWorkflow(w);if(!params.length){c.innerHTML='';return;}c.innerHTML=params.map(p=>`<div class="form-group"><label>${p.label}</label><input type="text" id="param-${p.key}" value="${p.default||''}" placeholder="${p.placeholder||''}"></div>`).join('');}
+    function getParamsForWorkflow(w){const map={'New branch':[{key:'branch',label:'Branch Name',default:'feature-branch'}],'Switch branch':[{key:'branch',label:'Branch Name',default:'main'}],'Delete branch':[{key:'branch',label:'Branch Name'}],'Merge branch':[{key:'branch',label:'Branch to Merge'}],'Rebase':[{key:'branch',label:'Rebase onto',default:'main'}],'Reset soft':[{key:'commit',label:'Commit',default:'HEAD~1'}],'Reset hard':[{key:'commit',label:'Commit',default:'HEAD~1'}],'Cherry-pick':[{key:'commit',label:'Commit Hash'}],'Tag':[{key:'tag',label:'Tag Name',default:'v1.0.0'},{key:'message',label:'Message'}],'Remote add':[{key:'url',label:'Repository URL'}],'Push':[{key:'remote',label:'Remote',default:'origin'},{key:'branch',label:'Branch',default:'main'}],'Pull':[{key:'remote',label:'Remote',default:'origin'},{key:'branch',label:'Branch',default:'main'}],'Fetch':[{key:'remote',label:'Remote',default:'origin'}],'Clone':[{key:'url',label:'Repository URL'}],'Commit':[{key:'message',label:'Commit Message'}],'Amend commit':[{key:'message',label:'New Message'}],'Revert commit':[{key:'commit',label:'Commit',default:'HEAD'}],'View log':[{key:'count',label:'Count',default:'20'}],'Diff':[{key:'from',label:'From',default:'HEAD~1'},{key:'to',label:'To',default:'HEAD'}],'Blame':[{key:'file',label:'File Path'}]};return map[w]||[];}
+    async function generateCommand(){if(!currentWorkflow)return alert('Select a workflow');const params={};getParamsForWorkflow(currentWorkflow).forEach(p=>{params[p.key]=document.getElementById(`param-${p.key}`)?.value||'';});const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({workflow:currentWorkflow,params})});const data=await res.json();currentCommand=data.command;document.getElementById('commandBox').style.display='flex';document.getElementById('commandOutput').textContent=data.command;loadHistory();}
+    async function saveCommand(){if(!currentCommand||!currentWorkflow)return;const name=prompt('Save as:',currentWorkflow);if(!name)return;await fetch('/api/saved',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,command:currentCommand,workflow:currentWorkflow})});loadSaved();}
+    async function loadHistory(){const h=await(await fetch('/api/history')).json();document.getElementById('historyList').innerHTML=h.length?h.map(i=>`<div class="history-item"><div><div class="history-cmd">${i.command}</div><div class="history-time">${i.workflow} • ${new Date(i.createdAt).toLocaleString()}</div></div><button class="btn btn-secondary btn-sm" onclick="copyText('${i.command.replace(/'/g,"\\'")}')">Copy</button></div>`).join(''):'<div style="text-align:center;padding:20px;color:var(--text-secondary)">No history yet</div>';}
+    async function loadSaved(){const s=await(await fetch('/api/saved')).json();document.getElementById('savedList').innerHTML=s.length?s.map(i=>`<div class="saved-item"><div><div class="history-cmd">${i.command}</div><div style="font-size:12px;color:var(--text-secondary)">${i.name}</div></div><div style="display:flex;gap:6px"><button class="btn btn-secondary btn-sm" onclick="copyText('${i.command.replace(/'/g,"\\'")}')">Copy</button><button class="btn btn-sm" style="background:var(--surface);color:var(--text)" onclick="deleteSaved('${i.id}')">X</button></div></div>`).join(''):'<div style="text-align:center;padding:20px;color:var(--text-secondary)">No saved commands</div>';}
+    async function deleteSaved(id){await fetch(`/api/saved/${id}`,{method:'DELETE'});loadSaved();}
+    function copyCommand(){copyText(currentCommand);}
+    function copyText(text){navigator.clipboard.writeText(text);const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+    function switchTab(tab){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));event.target.classList.add('active');document.getElementById(`panel-${tab}`).classList.add('active');}
+    loadData();
+  </script>
+</body>
+</html>
