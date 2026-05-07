@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Diary</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>📖 My Digital Diary</h1>
+
+    <form id="diaryForm">
+        <input type="text" id="title" placeholder="Entry Title" required>
+        <textarea id="content" placeholder="Write your diary here..." required></textarea>
+        <button type="submit">Save Entry</button>
+    </form>
+
+    <h2>Diary Entries</h2>
+    <div id="entries"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

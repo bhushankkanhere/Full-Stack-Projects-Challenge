@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Voting System</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>🗳️ Online Voting System</h1>
+
+    <form id="voteForm">
+        <input type="text" id="voterName" placeholder="Enter Your Name" required>
+
+        <select id="candidate" required>
+            <option value="">Select Candidate</option>
+        </select>
+
+        <button type="submit">Vote</button>
+    </form>
+
+    <h2>Voting Results</h2>
+    <div id="results"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

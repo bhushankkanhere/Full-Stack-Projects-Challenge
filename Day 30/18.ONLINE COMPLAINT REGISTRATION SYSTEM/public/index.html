@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complaint Registration System</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>📢 Online Complaint Registration</h1>
+
+    <form id="complaintForm">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="email" id="email" placeholder="Your Email" required>
+        <input type="text" id="subject" placeholder="Complaint Subject" required>
+        <textarea id="description" placeholder="Describe your complaint..." required></textarea>
+        <button type="submit">Submit Complaint</button>
+    </form>
+
+    <h2>All Complaints</h2>
+    <div id="complaints"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

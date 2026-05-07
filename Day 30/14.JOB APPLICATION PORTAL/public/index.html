@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Portal</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Job Application Portal</h1>
+
+    <form id="jobForm">
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="text" id="position" placeholder="Position Applied" required>
+        <textarea id="resume" placeholder="Paste Resume Details" required></textarea>
+        <button type="submit">Apply Now</button>
+    </form>
+
+    <h2>Applications</h2>
+    <div id="applications"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
