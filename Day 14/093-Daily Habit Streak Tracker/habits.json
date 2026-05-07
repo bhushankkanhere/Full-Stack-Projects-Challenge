@@ -1,0 +1,16 @@
+[
+  {
+    "id": "1775971140227",
+    "name": "Test Habit",
+    "category": "health",
+    "description": "Testing",
+    "target": 1,
+    "reminder": "",
+    "streak": 0,
+    "longestStreak": 0,
+    "currentProgress": 0,
+    "completedDates": [],
+    "createdAt": "2026-04-12T05:19:00.227Z",
+    "updatedAt": "2026-04-12T05:19:00.227Z"
+  }
+]

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Habit Streak Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="logo">🔥</span>
+                <h1>Habit Streak Tracker</h1>
+            </div>
+            <button id="addHabitBtn" class="btn btn-add">
+                <span class="icon">+</span>
+                <span class="btn-text">Add Habit</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Stats Cards -->
+        <section class="stats-section">
+            <div class="stat-card stat-primary">
+                <div class="stat-icon">📊</div>
+                <div class="stat-content">
+                    <div class="stat-number" id="totalHabits">0</div>
+                    <div class="stat-text">Total Habits</div>
+                </div>
+            </div>
+            <div class="stat-card stat-success">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-content">
+                    <div class="stat-number" id="activeStreaks">0</div>
+                    <div class="stat-text">Active Streaks</div>
+                </div>
+            </div>
+            <div class="stat-card stat-warning">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-content">
+                    <div class="stat-number" id="bestStreak">0</div>
+                    <div class="stat-text">Best Streak</div>
+                </div>
+            </div>
+            <div class="stat-card stat-info">
+                <div class="stat-icon">✅</div>
+                <div class="stat-content">
+                    <div class="stat-number" id="todayCompleted">0</div>
+                    <div class="stat-text">Today Done</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Controls: Search & Filter -->
+        <section class="controls-section">
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="Search habits by name or category...">
+                <span class="search-icon">🔍</span>
+            </div>
+            <div class="filter-group">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="active">🔥 Active</button>
+                <button class="filter-btn" data-filter="completed">✅ Done Today</button>
+                <button class="filter-btn" data-filter="missed">⏰ Not Done</button>
+            </div>
+        </section>
+
+        <!-- Habits Grid -->
+        <section class="habits-section">
+            <div id="habitsContainer" class="habits-grid">
+                <!-- Habits will be loaded here -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Add/Edit Habit Modal -->
+    <div id="habitModal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Habit</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="habitForm" class="modal-form">
+                <div class="form-group">
+                    <label for="habitName">Habit Name <span class="required">*</span></label>
+                    <input type="text" id="habitName" placeholder="e.g., Read 30 minutes, Exercise" required maxlength="100">
+                    <span class="form-error" id="nameError"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="habitCategory">Category</label>
+                        <select id="habitCategory">
+                            <option value="health">🏃 Health</option>
+                            <option value="learning">📚 Learning</option>
+                            <option value="productivity">💼 Productivity</option>
+                            <option value="mindfulness">🧘 Mindfulness</option>
+                            <option value="social">👥 Social</option>
+                            <option value="creative">🎨 Creative</option>
+                            <option value="finance">💰 Finance</option>
+                            <option value="other">📌 Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="habitTarget">Daily Target</label>
+                        <input type="number" id="habitTarget" value="1" min="1" max="100">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="habitDescription">Description (Optional)</label>
+                    <textarea id="habitDescription" placeholder="Add details about your habit..." rows="3" maxlength="500"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="habitReminder">Reminder Time (Optional)</label>
+                    <input type="time" id="habitReminder">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-save">Save Habit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Heatmap & Milestones Modal -->
+    <div id="heatmapModal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-dialog modal-large">
+            <div class="modal-header">
+                <h2 id="heatmapTitle">Habit Activity</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="heatmap-section">
+                    <h3>📅 Last 60 Days</h3>
+                    <div id="heatmapContainer" class="heatmap-wrapper"></div>
+                </div>
+                <div class="milestones-section">
+                    <h3>🏆 Milestones</h3>
+                    <div id="milestonesContainer" class="milestones-wrapper"></div>
+                </div>
+                <div class="streak-summary">
+                    <div class="streak-stat">
+                        <span class="streak-stat-label">Current Streak</span>
+                        <span class="streak-stat-value" id="currentStreakValue">0 days</span>
+                    </div>
+                    <div class="streak-stat">
+                        <span class="streak-stat-label">Longest Streak</span>
+                        <span class="streak-stat-value" id="longestStreakValue">0 days</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

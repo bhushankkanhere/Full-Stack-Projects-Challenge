@@ -1,0 +1,12 @@
+{
+  "name": "event-appointment-scheduler",
+  "version": "1.0.0",
+  "description": "Event and Appointment Scheduler - Full Stack Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["events", "scheduler", "calendar"],
+  "license": "MIT"
+}
