@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Organizer Tool</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f7fa; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 30px; border-radius: 10px; margin-bottom: 20px; }
+        header h1 { font-size: 2rem; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .card h2 { margin-bottom: 15px; color: #333; }
+        form { display: flex; flex-direction: column; gap: 10px; }
+        input, select, button { padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; }
+        button { background: #11998e; color: white; border: none; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #0e7a70; }
+        .rule-list { max-height: 300px; overflow-y: auto; }
+        .rule-item { display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; border-radius: 5px; margin-bottom: 10px; align-items: center; }
+        .rule-item .ext { background: #38ef7d; padding: 3px 10px; border-radius: 12px; font-weight: bold; }
+        .rule-item .folder { color: #666; }
+        .delete-btn { background: #e74c3c; padding: 5px 10px; }
+        .templates { margin-top: 15px; }
+        .template-btn { background: #6c757d; padding: 8px 15px; margin: 5px; font-size: 0.9rem; }
+        .drop-zone { border: 3px dashed #11998e; border-radius: 10px; padding: 40px; text-align: center; margin: 20px 0; background: #f8fffe; }
+        .drop-zone p { color: #666; }
+        textarea { width: 100%; min-height: 100px; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-family: monospace; }
+        .folder-tree { margin-top: 20px; }
+        .folder { margin-left: 20px; }
+        .folder-name { font-weight: bold; color: #11998e; margin: 5px 0; }
+        .file-item { margin-left: 20px; padding: 3px 0; color: #666; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
+        .stat { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; padding: 20px; border-radius: 10px; text-align: center; }
+        .stat h3 { font-size: 2rem; }
+        .stat p { margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📁 File Organizer Tool</h1>
+            <p>Create rules to automatically organize your files</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat">
+                <h3 id="ruleCount">0</h3>
+                <p>Rules Created</p>
+            </div>
+            <div class="stat">
+                <h3 id="fileCount">0</h3>
+                <p>Files Organized</p>
+            </div>
+            <div class="stat">
+                <h3 id="folderCount">0</h3>
+                <p>Folders Created</p>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Add Organization Rule</h2>
+                <form id="ruleForm">
+                    <input type="text" id="extension" placeholder="File extension (e.g., jpg, pdf)" required>
+                    <input type="text" id="folder" placeholder="Target folder name" required>
+                    <button type="submit">Add Rule</button>
+                </form>
+
+                <div class="templates">
+                    <h3>Quick Templates</h3>
+                    <button class="template-btn" onclick="addTemplate('jpg', 'Photos')">📷 Photos</button>
+                    <button class="template-btn" onclick="addTemplate('pdf', 'Documents')">📄 Documents</button>
+                    <button class="template-btn" onclick="addTemplate('mp3', 'Music')">🎵 Music</button>
+                    <button class="template-btn" onclick="addTemplate('mp4', 'Videos')">🎬 Videos</button>
+                    <button class="template-btn" onclick="addTemplate('zip', 'Archives')">📦 Archives</button>
+                </div>
+
+                <h3 style="margin-top: 20px;">Rules</h3>
+                <div class="rule-list" id="ruleList"></div>
+            </div>
+
+            <div class="card">
+                <h2>Test File Organization</h2>
+                <div class="drop-zone">
+                    <p>Enter filenames to simulate organization</p>
+                    <textarea id="fileInput" placeholder="Enter filenames (one per line):&#10;photo.jpg&#10;document.pdf&#10;song.mp3&#10;video.mp4"></textarea>
+                    <button onclick="organizeFiles()" style="margin-top: 10px;">Organize Files</button>
+                </div>
+                <div class="folder-tree" id="folderTree"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadRules() {
+            const res = await fetch('/api/rules');
+            const rules = await res.json();
+            document.getElementById('ruleCount').textContent = rules.length;
+            
+            const list = document.getElementById('ruleList');
+            list.innerHTML = rules.map(r => `
+                <div class="rule-item">
+                    <span class="ext">.${r.extension}</span>
+                    <span class="folder">→ ${r.folder}/</span>
+                    <button class="delete-btn" onclick="deleteRule('${r.id}')">✕</button>
+                </div>
+            `).join('') || '<p style="color: #666;">No rules yet. Add a rule or use a template.</p>';
+        }
+
+        async function addTemplate(ext, folder) {
+            await fetch('/api/rules', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ extension: ext, folder })
+            });
+            loadRules();
+        }
+
+        async function deleteRule(id) {
+            await fetch(`/api/rules/${id}`, { method: 'DELETE' });
+            loadRules();
+        }
+
+        async function organizeFiles() {
+            const input = document.getElementById('fileInput').value;
+            const files = input.split('\n').filter(f => f.trim());
+            
+            const res = await fetch('/api/organize', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ files })
+            });
+            const result = await res.json();
+            
+            document.getElementById('fileCount').textContent = result.count;
+            document.getElementById('folderCount').textContent = Object.keys(result.organized).length;
+
+            const tree = document.getElementById('folderTree');
+            tree.innerHTML = '<h3>Organized Structure</h3>' + 
+                Object.entries(result.organized).map(([folder, files]) => `
+                    <div class="folder">
+                        <div class="folder-name">📁 ${folder}/</div>
+                        ${files.map(f => `<div class="file-item">📄 ${f}</div>`).join('')}
+                    </div>
+                `).join('');
+        }
+
+        document.getElementById('ruleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                extension: document.getElementById('extension').value,
+                folder: document.getElementById('folder').value
+            };
+            await fetch('/api/rules', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            e.target.reset();
+            loadRules();
+        });
+
+        loadRules();
+    </script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker - Manage Your Finances</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>💰 Expense Tracker</h1>
+                <p class="subtitle">Track your income and expenses</p>
+            </div>
+            <button id="addEntryBtn" class="btn btn-primary" aria-label="Add new entry">
+                <span class="btn-icon">+</span> Add Entry
+            </button>
+        </header>
+
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+            <div class="summary-card income">
+                <div class="summary-icon">📈</div>
+                <div class="summary-info">
+                    <span class="summary-label">Total Income</span>
+                    <span class="summary-amount" id="totalIncome">$0.00</span>
+                </div>
+            </div>
+            <div class="summary-card expense">
+                <div class="summary-icon">📉</div>
+                <div class="summary-info">
+                    <span class="summary-label">Total Expenses</span>
+                    <span class="summary-amount" id="totalExpenses">$0.00</span>
+                </div>
+            </div>
+            <div class="summary-card balance">
+                <div class="summary-icon">💵</div>
+                <div class="summary-info">
+                    <span class="summary-label">Balance</span>
+                    <span class="summary-amount" id="balance">$0.00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filters -->
+        <section class="controls-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Search entries..." aria-label="Search entries">
+            </div>
+            
+            <div class="filters">
+                <select id="typeFilter" aria-label="Filter by type">
+                    <option value="">All Types</option>
+                    <option value="income">📈 Income</option>
+                    <option value="expense">📉 Expense</option>
+                </select>
+
+                <select id="categoryFilter" aria-label="Filter by category">
+                    <option value="">All Categories</option>
+                    <option value="Salary">💼 Salary</option>
+                    <option value="Freelance">💻 Freelance</option>
+                    <option value="Food">🍔 Food</option>
+                    <option value="Transport">🚗 Transport</option>
+                    <option value="Shopping">🛍️ Shopping</option>
+                    <option value="Bills">📄 Bills</option>
+                    <option value="Entertainment">🎬 Entertainment</option>
+                    <option value="Health">🏥 Health</option>
+                    <option value="Other">📦 Other</option>
+                </select>
+
+                <input type="month" id="monthFilter" aria-label="Filter by month">
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div id="entriesList" class="entries-list">
+                <div class="empty-state">
+                    <div class="empty-icon">💰</div>
+                    <h3>No entries yet</h3>
+                    <p>Click "Add Entry" to track your finances!</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2026 Expense Tracker. Stay financially fit!</p>
+        </footer>
+    </div>
+
+    <!-- Modal for adding/editing entries -->
+    <div id="entryModal" class="modal" role="dialog" aria-labelledby="modalTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Entry</h2>
+                <button class="close-btn" id="closeBtn" aria-label="Close modal">&times;</button>
+            </div>
+            
+            <form id="entryForm" novalidate>
+                <div class="form-group">
+                    <label for="entryTitle">Title *</label>
+                    <input type="text" id="entryTitle" maxlength="100" placeholder="Enter title" required aria-required="true">
+                    <span class="error-message" id="titleError"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="entryAmount">Amount ($) *</label>
+                        <input type="number" id="entryAmount" min="0.01" step="0.01" placeholder="0.00" required aria-required="true">
+                        <span class="error-message" id="amountError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="entryType">Type *</label>
+                        <select id="entryType" required aria-required="true">
+                            <option value="">Select type</option>
+                            <option value="income">📈 Income</option>
+                            <option value="expense">📉 Expense</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="entryCategory">Category *</label>
+                        <select id="entryCategory" required aria-required="true">
+                            <option value="">Select category</option>
+                            <option value="Salary">💼 Salary</option>
+                            <option value="Freelance">💻 Freelance</option>
+                            <option value="Food">🍔 Food</option>
+                            <option value="Transport">🚗 Transport</option>
+                            <option value="Shopping">🛍️ Shopping</option>
+                            <option value="Bills">📄 Bills</option>
+                            <option value="Entertainment">🎬 Entertainment</option>
+                            <option value="Health">🏥 Health</option>
+                            <option value="Other">📦 Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="entryDate">Date *</label>
+                        <input type="date" id="entryDate" required aria-required="true">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="entryDescription">Description (optional)</label>
+                    <textarea id="entryDescription" maxlength="500" placeholder="Add notes (optional)" rows="3"></textarea>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="submit" id="saveBtn" class="btn btn-primary">Save Entry</button>
+                    <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

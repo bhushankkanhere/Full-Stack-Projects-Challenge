@@ -1,0 +1,903 @@
+:root {
+    --primary: #f2994a;
+    --secondary: #f2c94c;
+    --gradient: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+    --bg-dark: #1a1a2e;
+    --bg-card: #16213e;
+    --bg-input: #0f3460;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0b0;
+    --text-muted: #6c6c80;
+    --border: #2a2a4a;
+    --success: #2ecc71;
+    --warning: #f39c12;
+    --danger: #e74c3c;
+    --muscle-chest: #f2994a;
+    --muscle-back: #6c5ce7;
+    --muscle-shoulders: #00cec9;
+    --muscle-arms: #fd79a8;
+    --muscle-legs: #00b894;
+    --muscle-core: #e17055;
+    --muscle-fullbody: #74b9ff;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --radius: 12px;
+    --radius-sm: 8px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.app-header {
+    text-align: center;
+    padding: 30px 0;
+    background: var(--gradient);
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+}
+
+.app-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.subtitle {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-top: 8px;
+}
+
+/* Tab Navigation */
+.tab-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.tab-btn {
+    padding: 12px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.tab-btn.active {
+    background: var(--gradient);
+    color: var(--bg-dark);
+    border-color: var(--primary);
+    font-weight: 600;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Controls Bar */
+.controls-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.search-box {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.search-box input {
+    flex: 1;
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.search-box input::placeholder {
+    color: var(--text-muted);
+}
+
+.search-box button {
+    padding: 12px 16px;
+    background: var(--bg-input);
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.search-box button:hover {
+    background: var(--primary);
+    color: var(--bg-dark);
+}
+
+.filter-group {
+    display: flex;
+    gap: 8px;
+}
+
+.filter-group select {
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+}
+
+.filter-group select:focus {
+    border-color: var(--primary);
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background: var(--gradient);
+    color: var(--bg-dark);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(242, 153, 74, 0.4);
+}
+
+.btn-secondary {
+    background: var(--bg-input);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background: var(--border);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-danger:hover {
+    opacity: 0.9;
+}
+
+/* Exercise List */
+.exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.exercise-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 20px;
+    border: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    transition: all 0.2s;
+}
+
+.exercise-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow);
+}
+
+.exercise-info {
+    flex: 1;
+    min-width: 200px;
+}
+
+.exercise-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.exercise-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.exercise-meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.muscle-badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.muscle-badge.Chest {
+    background: rgba(242, 153, 74, 0.2);
+    color: var(--muscle-chest);
+}
+
+.muscle-badge.Back {
+    background: rgba(108, 92, 231, 0.2);
+    color: var(--muscle-back);
+}
+
+.muscle-badge.Shoulders {
+    background: rgba(0, 206, 201, 0.2);
+    color: var(--muscle-shoulders);
+}
+
+.muscle-badge.Arms {
+    background: rgba(253, 121, 168, 0.2);
+    color: var(--muscle-arms);
+}
+
+.muscle-badge.Legs {
+    background: rgba(0, 184, 148, 0.2);
+    color: var(--muscle-legs);
+}
+
+.muscle-badge.Core {
+    background: rgba(225, 112, 85, 0.2);
+    color: var(--muscle-core);
+}
+
+.muscle-badge.Full {
+    background: rgba(116, 185, 255, 0.2);
+    color: var(--muscle-fullbody);
+}
+
+.exercise-stats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.exercise-stat {
+    text-align: center;
+}
+
+.exercise-stat-value {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.exercise-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.exercise-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.icon-btn:hover {
+    background: var(--primary);
+    color: var(--bg-dark);
+    border-color: var(--primary);
+}
+
+.icon-btn.delete:hover {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+}
+
+.empty-state svg {
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+/* History */
+.history-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+}
+
+.date-range {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.date-range label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.date-range input[type="date"] {
+    padding: 8px 12px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.date-range input[type="date"]:focus {
+    border-color: var(--primary);
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.history-group {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 16px;
+    border: 1px solid var(--border);
+}
+
+.history-date-header {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    color: var(--primary);
+}
+
+.history-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(42, 42, 74, 0.5);
+}
+
+.history-entry:last-child {
+    border-bottom: none;
+}
+
+.history-exercise {
+    font-weight: 500;
+}
+
+.history-details {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Stats Dashboard */
+.stats-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: var(--radius);
+    text-align: center;
+    border: 1px solid var(--border);
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.progress-section,
+.muscle-distribution,
+.recent-activity {
+    background: var(--bg-card);
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+}
+
+.progress-section h2,
+.muscle-distribution h2,
+.recent-activity h2 {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.top-exercise-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.top-exercise-name {
+    min-width: 120px;
+    font-weight: 500;
+}
+
+.top-exercise-bar {
+    flex: 1;
+    height: 24px;
+    background: var(--bg-input);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.top-exercise-fill {
+    height: 100%;
+    background: var(--gradient);
+    border-radius: 12px;
+    transition: width 0.5s ease;
+}
+
+.top-exercise-volume {
+    min-width: 80px;
+    text-align: right;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.muscle-chart {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.muscle-item {
+    flex: 1;
+    min-width: 100px;
+    text-align: center;
+}
+
+.muscle-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.muscle-name {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.recent-activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.activity-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: var(--bg-input);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+}
+
+.activity-exercise {
+    font-weight: 500;
+}
+
+.activity-date {
+    color: var(--text-muted);
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow);
+}
+
+.modal-content.modal-sm {
+    max-width: 400px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header h2 {
+    font-size: 1.2rem;
+}
+
+.close-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.close-btn:hover {
+    background: var(--border);
+    color: var(--text-primary);
+}
+
+form {
+    padding: 24px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: var(--primary);
+}
+
+.form-group input.invalid,
+.form-group select.invalid {
+    border-color: var(--danger);
+}
+
+.error-msg {
+    color: var(--danger);
+    font-size: 0.8rem;
+    margin-top: 4px;
+    display: block;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.volume-preview {
+    background: var(--bg-input);
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.volume-preview span:last-child {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.toast {
+    padding: 14px 20px;
+    border-radius: var(--radius-sm);
+    color: white;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+    min-width: 250px;
+    max-width: 400px;
+}
+
+.toast.success {
+    background: var(--success);
+}
+
+.toast.error {
+    background: var(--danger);
+}
+
+.toast.warning {
+    background: var(--warning);
+}
+
+.toast.info {
+    background: var(--primary);
+    color: var(--bg-dark);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .app-container {
+        padding: 12px;
+    }
+
+    .app-header {
+        padding: 20px 16px;
+    }
+
+    .app-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .controls-bar {
+        flex-direction: column;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    .filter-group {
+        width: 100%;
+    }
+
+    .filter-group select {
+        flex: 1;
+    }
+
+    .btn-primary {
+        width: 100%;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .exercise-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .exercise-actions {
+        align-self: flex-end;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        margin: 10px;
+    }
+
+    form {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .exercise-stats {
+        gap: 12px;
+    }
+
+    .tab-btn {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+    }
+
+    .modal-actions,
+    .detail-actions {
+        flex-direction: column;
+    }
+
+    .modal-actions .btn,
+    .detail-actions .btn {
+        width: 100%;
+    }
+
+    .history-controls {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 320px) {
+    .stat-value {
+        font-size: 1.4rem;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+    }
+
+    .exercise-card {
+        padding: 12px;
+    }
+
+    .top-exercise-name {
+        min-width: 80px;
+        font-size: 0.8rem;
+    }
+
+    .muscle-circle {
+        width: 50px;
+        height: 50px;
+        font-size: 0.9rem;
+    }
+}

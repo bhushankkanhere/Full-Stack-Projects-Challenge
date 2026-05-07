@@ -1,0 +1,12 @@
+{
+  "name": "fitness-workout-logger",
+  "version": "1.0.0",
+  "description": "Fitness Workout Logger - Full Stack Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["fitness", "workout", "logger"],
+  "license": "MIT"
+}
