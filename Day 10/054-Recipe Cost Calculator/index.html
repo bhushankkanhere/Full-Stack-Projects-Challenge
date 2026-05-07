@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Cost Calculator</title>
+  <style>
+    :root { --bg: #fef3c7; --bg-card: #fffbeb; --text: #451a03; --text-secondary: #92400e; --accent: #d97706; --accent-hover: #b45309; --border: #fde68a; --success: #059669; --danger: #dc2626; --shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    .header { background: linear-gradient(135deg, #d97706, #f59e0b); padding: 20px 24px; color: #fff; }
+    .header h1 { font-size: 24px; display: flex; align-items: center; gap: 10px; }
+    .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+    .tabs { display: flex; gap: 4px; margin-bottom: 20px; background: var(--bg-card); border-radius: 10px; padding: 4px; box-shadow: var(--shadow); }
+    .tab { flex: 1; padding: 10px; border: none; background: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; color: var(--text-secondary); }
+    .tab.active { background: var(--accent); color: #fff; }
+    .panel { display: none; } .panel.active { display: block; }
+    .card { background: var(--bg-card); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-weight: 500; margin-bottom: 4px; font-size: 14px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--text); font-size: 14px; }
+    .form-row { display: flex; gap: 10px; }
+    .form-row > * { flex: 1; }
+    .btn { padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.2s; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-sm { padding: 6px 12px; font-size: 13px; }
+    .recipe-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; background: #fff; }
+    .recipe-card h3 { color: var(--accent); margin-bottom: 8px; }
+    .recipe-meta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; font-size: 14px; color: var(--text-secondary); }
+    .recipe-meta span { background: var(--bg); padding: 4px 10px; border-radius: 12px; }
+    .ingredients-list { margin: 10px 0; }
+    .ingredient-row { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+    .ingredient-row input { padding: 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
+    .ingredient-row .name { flex: 2; } .ingredient-row .qty { flex: 0.7; } .ingredient-row .unit { flex: 0.6; } .ingredient-row .cost { flex: 0.7; }
+    .cost-summary { background: var(--bg); padding: 16px; border-radius: 10px; margin-top: 12px; }
+    .cost-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .cost-row:last-child { border: none; font-weight: 700; font-size: 18px; color: var(--accent); }
+    .scale-control { display: flex; align-items: center; gap: 8px; margin: 10px 0; }
+    .scale-control button { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 50%; background: #fff; cursor: pointer; font-size: 16px; font-weight: 700; }
+    .shopping-item { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .shopping-item input[type="checkbox"] { margin-right: 10px; }
+    .empty { text-align: center; padding: 40px; color: var(--text-secondary); }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--bg-card); padding: 24px; border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🍳 Recipe Cost Calculator</h1>
+  </div>
+  <div class="container">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('recipes')">Recipes</button>
+      <button class="tab" onclick="switchTab('add')">Add Recipe</button>
+      <button class="tab" onclick="switchTab('shopping')">Shopping List</button>
+    </div>
+    <div class="panel active" id="panel-recipes"><div id="recipeList"></div></div>
+    <div class="panel" id="panel-add">
+      <div class="card">
+        <h3 style="margin-bottom:16px">Add New Recipe</h3>
+        <div class="form-group"><label>Recipe Name</label><input type="text" id="rName" placeholder="e.g., Spaghetti Bolognese"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Category</label><select id="rCategory"></select></div>
+          <div class="form-group"><label>Servings</label><input type="number" id="rServings" value="4" min="1"></div>
+        </div>
+        <div class="form-group"><label>Ingredients</label>
+          <div id="ingredientsContainer"></div>
+          <button class="btn btn-sm" style="background:var(--bg);color:var(--text);margin-top:8px" onclick="addIngredientRow()">+ Add Ingredient</button>
+        </div>
+        <div class="form-group"><label>Instructions</label><textarea id="rInstructions" rows="3" placeholder="Step by step instructions..."></textarea></div>
+        <div class="cost-summary" id="costPreview" style="display:none"></div>
+        <button class="btn btn-primary" style="margin-top:12px;width:100%" onclick="saveRecipe()">Save Recipe</button>
+      </div>
+    </div>
+    <div class="panel" id="panel-shopping">
+      <div class="card">
+        <h3 style="margin-bottom:12px">Generate Shopping List</h3>
+        <div id="shoppingRecipes" style="margin-bottom:12px"></div>
+        <button class="btn btn-primary" onclick="generateShoppingList()">Generate List</button>
+        <div id="shoppingResult" style="margin-top:16px"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let recipes = [], scaleFactors = {};
+    async function loadData() {
+      recipes = await (await fetch('/api/recipes')).json();
+      const cats = await (await fetch('/api/categories')).json();
+      document.getElementById('rCategory').innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
+      renderRecipes(); renderShoppingRecipes();
+    }
+    function renderRecipes() {
+      const list = document.getElementById('recipeList');
+      if (!recipes.length) { list.innerHTML = '<div class="empty">No recipes yet. Add your first recipe!</div>'; return; }
+      list.innerHTML = recipes.map(r => `
+        <div class="recipe-card">
+          <h3>${r.name}</h3>
+          <div class="recipe-meta"><span>${r.category}</span><span>🍽 ${r.servings} servings</span><span>💰 $${r.cost?.total || '0'}</span><span>Per serving: $${r.cost?.perServing || '0'}</span></div>
+          <div class="scale-control"><span>Scale:</span><button onclick="scaleRecipe('${r.id}',-1)">-</button><span id="scale-${r.id}">1x</span><button onclick="scaleRecipe('${r.id}',1)">+</button></div>
+          <div class="ingredients-list">${(r.ingredients || []).map(i => `<div style="padding:4px 0">${i.name} - ${((i.quantity||1)*(scaleFactors[r.id]||1)).toFixed(1)} ${i.unit} ($${(i.cost*(scaleFactors[r.id]||1)).toFixed(2)})</div>`).join('')}</div>
+          ${r.instructions ? `<div style="margin-top:8px;font-size:14px;color:var(--text-secondary)">${r.instructions}</div>` : ''}
+          <div style="margin-top:12px;display:flex;gap:8px"><button class="btn btn-danger btn-sm" onclick="deleteRecipe('${r.id}')">Delete</button></div>
+        </div>`).join('');
+    }
+    function scaleRecipe(id, delta) {
+      scaleFactors[id] = Math.max(0.5, (scaleFactors[id] || 1) + delta * 0.5);
+      document.getElementById(`scale-${id}`).textContent = scaleFactors[id] + 'x';
+      renderRecipes();
+    }
+    function renderShoppingRecipes() {
+      document.getElementById('shoppingRecipes').innerHTML = recipes.map(r => `<label style="display:block;padding:6px 0"><input type="checkbox" value="${r.id}"> ${r.name}</label>`).join('');
+    }
+    async function generateShoppingList() {
+      const checked = [...document.querySelectorAll('#shoppingRecipes input:checked')].map(c => c.value);
+      if (!checked.length) return alert('Select at least one recipe');
+      const list = await (await fetch('/api/shopping-list', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ recipeIds: checked }) })).json();
+      document.getElementById('shoppingResult').innerHTML = '<h4 style="margin-bottom:10px">Shopping List</h4>' + list.map(i => `<div class="shopping-item"><input type="checkbox"><span>${i.name} - ${i.quantity.toFixed(1)} ${i.unit}</span></div>`).join('');
+    }
+    function addIngredientRow() {
+      const c = document.getElementById('ingredientsContainer');
+      const row = document.createElement('div'); row.className = 'ingredient-row';
+      row.innerHTML = '<input class="name" placeholder="Name"><input class="qty" placeholder="Qty" type="number" value="1"><input class="unit" placeholder="Unit"><input class="cost" placeholder="Cost $" type="number" step="0.01"><button class="btn btn-danger btn-sm" onclick="this.parentElement.remove();calcPreview()">X</button>';
+      c.appendChild(row);
+    }
+    function calcPreview() {
+      const rows = [...document.querySelectorAll('#ingredientsContainer .ingredient-row')];
+      const ingredients = rows.map(r => ({ name: r.querySelector('.name').value, quantity: parseFloat(r.querySelector('.qty').value) || 0, unit: r.querySelector('.unit').value, cost: parseFloat(r.querySelector('.cost').value) || 0 }));
+      const servings = parseInt(document.getElementById('rServings').value) || 1;
+      const total = ingredients.reduce((s, i) => s + (i.cost * i.quantity), 0);
+      document.getElementById('costPreview').style.display = 'block';
+      document.getElementById('costPreview').innerHTML = `<div class="cost-row"><span>Total Cost</span><span>$${total.toFixed(2)}</span></div><div class="cost-row"><span>Cost per Serving</span><span>$${(total / servings).toFixed(2)}</span></div>`;
+    }
+    async function saveRecipe() {
+      const rows = [...document.querySelectorAll('#ingredientsContainer .ingredient-row')];
+      const ingredients = rows.map(r => ({ name: r.querySelector('.name').value, quantity: parseFloat(r.querySelector('.qty').value) || 0, unit: r.querySelector('.unit').value, cost: parseFloat(r.querySelector('.cost').value) || 0 }));
+      const recipe = { name: document.getElementById('rName').value, category: document.getElementById('rCategory').value, servings: parseInt(document.getElementById('rServings').value) || 1, ingredients, instructions: document.getElementById('rInstructions').value };
+      if (!recipe.name) return alert('Enter recipe name');
+      await fetch('/api/recipes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(recipe) });
+      document.getElementById('rName').value = ''; document.getElementById('rInstructions').value = '';
+      document.getElementById('ingredientsContainer').innerHTML = '';
+      loadData(); switchTab('recipes');
+    }
+    async function deleteRecipe(id) { if (confirm('Delete this recipe?')) { await fetch(`/api/recipes/${id}`, { method: 'DELETE' }); loadData(); } }
+    function switchTab(tab) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); event.target.classList.add('active'); document.getElementById(`panel-${tab}`).classList.add('active'); }
+    document.getElementById('ingredientsContainer')?.addEventListener('input', calcPreview);
+    document.getElementById('rServings')?.addEventListener('input', calcPreview);
+    addIngredientRow(); addIngredientRow(); addIngredientRow(); loadData();
+  </script>
+</body>
+</html>

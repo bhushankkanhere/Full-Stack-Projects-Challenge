@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Time Tracker</title>
+  <style>
+    :root { --bg: #fafafa; --bg-card: #fff; --text: #1e293b; --text-secondary: #64748b; --border: #e2e8f0; --accent: #6366f1; --accent-hover: #4f46e5; --success: #22c55e; --danger: #ef4444; --warning: #f59e0b; --shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    .header { background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 20px 24px; color: #fff; }
+    .header h1 { font-size: 24px; margin-bottom: 4px; }
+    .header p { opacity: 0.9; font-size: 14px; }
+    .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+    .tabs { display: flex; gap: 4px; margin-bottom: 20px; background: var(--bg-card); border-radius: 10px; padding: 4px; box-shadow: var(--shadow); }
+    .tab { flex: 1; padding: 12px; border: none; background: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.2s; }
+    .tab.active { background: var(--accent); color: #fff; }
+    .panel { display: none; } .panel.active { display: block; }
+    .card { background: var(--bg-card); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+    .form-row { display: flex; gap: 12px; margin-bottom: 16px; }
+    .form-row input, .form-row select, .form-row button { padding: 10px 14px; border-radius: 8px; font-size: 14px; }
+    .form-row input, .form-row select { flex: 1; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+    .btn { border: none; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-sm { padding: 6px 12px; font-size: 13px; }
+    .task-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+    .task-item:last-child { border-bottom: none; }
+    .task-info { flex: 1; }
+    .task-title { font-weight: 600; font-size: 15px; }
+    .task-meta { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+    .task-actions { display: flex; gap: 8px; align-items: center; }
+    .timer { font-family: monospace; font-size: 18px; font-weight: 600; color: var(--accent); min-width: 80px; text-align: center; }
+    .project-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; color: #fff; }
+    .log-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .log-time { font-family: monospace; font-weight: 600; margin-right: 16px; min-width: 80px; }
+    .empty { text-align: center; padding: 40px; color: var(--text-secondary); }
+    .report-table { width: 100%; border-collapse: collapse; }
+    .report-table th, .report-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+    .report-table th { background: var(--bg); font-weight: 600; font-size: 14px; }
+    @media (max-width: 768px) { .form-row { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Task Time Tracker</h1>
+    <p>Track time spent on your projects and tasks</p>
+  </div>
+  <div class="container">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('tasks')">Tasks</button>
+      <button class="tab" onclick="switchTab('projects')">Projects</button>
+      <button class="tab" onclick="switchTab('logs')">Time Logs</button>
+      <button class="tab" onclick="switchTab('report')">Report</button>
+    </div>
+    <div class="panel active" id="panel-tasks">
+      <div class="card">
+        <div class="form-row">
+          <input type="text" id="taskTitle" placeholder="Task title...">
+          <select id="taskProject"></select>
+          <button class="btn btn-primary" onclick="addTask()">+ Add Task</button>
+        </div>
+      </div>
+      <div class="card" id="taskList"></div>
+    </div>
+    <div class="panel" id="panel-projects">
+      <div class="card">
+        <div class="form-row">
+          <input type="text" id="projName" placeholder="Project name...">
+          <input type="color" id="projColor" value="#3b82f6" style="max-width:50px">
+          <button class="btn btn-primary" onclick="addProject()">+ Add Project</button>
+        </div>
+      </div>
+      <div class="card" id="projectList"></div>
+    </div>
+    <div class="panel" id="panel-logs">
+      <div class="card" id="logList"></div>
+    </div>
+    <div class="panel" id="panel-report">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <h3>Time Report by Project</h3>
+          <a href="/api/export" class="btn btn-success btn-sm">Export CSV</a>
+        </div>
+        <table class="report-table"><thead><tr><th>Project</th><th>Tasks</th><th>Logs</th><th>Total Time</th></tr></thead><tbody id="reportBody"></tbody></table>
+      </div>
+    </div>
+  </div>
+  <script>
+    let projects = [], tasks = [], timeLogs = [], activeTimers = {};
+    async function loadData() {
+      projects = await (await fetch('/api/projects')).json();
+      tasks = await (await fetch('/api/tasks')).json();
+      timeLogs = await (await fetch('/api/time-logs')).json();
+      renderProjects(); renderTasks(); renderLogs(); renderReport();
+    }
+    function renderProjects() {
+      const sel = document.getElementById('taskProject');
+      sel.innerHTML = projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+      document.getElementById('projectList').innerHTML = projects.length ? projects.map(p => `<div class="task-item"><div class="task-info"><span class="project-badge" style="background:${p.color}">${p.name}</span></div></div>`).join('') : '<div class="empty">No projects yet</div>';
+    }
+    function renderTasks() {
+      const list = document.getElementById('taskList');
+      if (!tasks.length) { list.innerHTML = '<div class="empty">No tasks yet. Add one above!</div>'; return; }
+      list.innerHTML = tasks.map(t => {
+        const proj = projects.find(p => p.id === t.projectId);
+        const log = timeLogs.filter(l => l.taskId === t.id && l.endTime).reduce((s, l) => s + (l.duration || 0), 0);
+        const activeLog = timeLogs.find(l => l.taskId === t.id && !l.endTime);
+        return `<div class="task-item"><div class="task-info"><div class="task-title">${t.title}</div><div class="task-meta">${proj ? `<span class="project-badge" style="background:${proj.color}">${proj.name}</span>` : ''} • ${formatTime(log)}</div></div><div class="task-actions"><div class="timer" id="timer-${t.id}">${activeLog ? formatTime(activeLog.duration + Math.floor((Date.now() - new Date(activeLog.startTime).getTime()) / 1000)) : '00:00:00'}</div>${activeLog ? `<button class="btn btn-danger btn-sm" onclick="stopTimer('${t.id}','${activeLog.id}')">Stop</button>` : `<button class="btn btn-success btn-sm" onclick="startTimer('${t.id}')">Start</button>`}<button class="btn btn-sm" style="background:var(--border);color:var(--text)" onclick="deleteTask('${t.id}')">Del</button></div></div>`;
+      }).join('');
+      Object.keys(activeTimers).forEach(id => { if (!activeTimers[id]) clearInterval(activeTimers[id]); });
+      tasks.forEach(t => {
+        const activeLog = timeLogs.find(l => l.taskId === t.id && !l.endTime);
+        if (activeLog) {
+          activeTimers[t.id] = setInterval(() => {
+            const el = document.getElementById(`timer-${t.id}`);
+            if (el) { const base = activeLog.duration || 0; const extra = Math.floor((Date.now() - new Date(activeLog.startTime).getTime()) / 1000); el.textContent = formatTime(base + extra); }
+          }, 1000);
+        }
+      });
+    }
+    function renderLogs() {
+      const list = document.getElementById('logList');
+      const logs = timeLogs.filter(l => l.endTime).sort((a, b) => new Date(b.endTime) - new Date(a.endTime));
+      if (!logs.length) { list.innerHTML = '<div class="empty">No completed time logs</div>'; return; }
+      list.innerHTML = logs.map(l => {
+        const task = tasks.find(t => t.id === l.taskId);
+        return `<div class="log-item"><div class="log-time">${formatTime(l.duration)}</div><div class="task-info"><div class="task-title">${task?.title || 'Deleted task'}</div><div class="task-meta">${new Date(l.startTime).toLocaleString()} → ${new Date(l.endTime).toLocaleString()}</div></div></div>`;
+      }).join('');
+    }
+    async function renderReport() {
+      const report = await (await fetch('/api/report')).json();
+      document.getElementById('reportBody').innerHTML = report.map(r => `<tr><td><span class="project-badge" style="background:${r.color}">${r.name}</span></td><td>${r.taskCount}</td><td>${r.logCount}</td><td>${formatTime(r.totalSeconds)}</td></tr>`).join('');
+    }
+    async function addProject() {
+      const name = document.getElementById('projName').value.trim(); const color = document.getElementById('projColor').value;
+      if (!name) return;
+      await fetch('/api/projects', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, color }) });
+      document.getElementById('projName').value = ''; loadData();
+    }
+    async function addTask() {
+      const title = document.getElementById('taskTitle').value.trim(); const projectId = document.getElementById('taskProject').value;
+      if (!title) return;
+      await fetch('/api/tasks', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title, projectId }) });
+      document.getElementById('taskTitle').value = ''; loadData();
+    }
+    async function startTimer(taskId) {
+      const log = await (await fetch('/api/time-logs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ taskId, startTime: new Date().toISOString() }) })).json();
+      loadData();
+    }
+    async function stopTimer(taskId, logId) {
+      await fetch(`/api/time-logs/${logId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ endTime: new Date().toISOString() }) });
+      clearInterval(activeTimers[taskId]); delete activeTimers[taskId]; loadData();
+    }
+    async function deleteTask(id) {
+      if (!confirm('Delete this task?')) return;
+      await fetch(`/api/tasks/${id}`, { method: 'DELETE' }); loadData();
+    }
+    function formatTime(seconds) {
+      const h = Math.floor(seconds / 3600); const m = Math.floor((seconds % 3600) / 60); const s = seconds % 60;
+      return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active'); document.getElementById(`panel-${tab}`).classList.add('active');
+    }
+    loadData();
+  </script>
+</body>
+</html>

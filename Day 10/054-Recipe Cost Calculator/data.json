@@ -1,0 +1,20 @@
+{
+  "recipes": [
+    {
+      "id": "1",
+      "name": "Classic Pancakes",
+      "category": "Breakfast",
+      "servings": 4,
+      "ingredients": [
+        { "name": "Flour", "quantity": 2, "unit": "cups", "cost": 0.50 },
+        { "name": "Milk", "quantity": 1.5, "unit": "cups", "cost": 0.75 },
+        { "name": "Eggs", "quantity": 2, "unit": "pcs", "cost": 0.40 },
+        { "name": "Butter", "quantity": 3, "unit": "tbsp", "cost": 0.30 }
+      ],
+      "instructions": "Mix dry ingredients. Add wet ingredients. Cook on griddle until golden.",
+      "createdAt": "2026-04-12T00:00:00.000Z",
+      "cost": { "total": "3.90", "perServing": "0.98" }
+    }
+  ],
+  "categories": ["Breakfast", "Lunch", "Dinner", "Dessert", "Snacks"]
+}

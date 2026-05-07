@@ -1,0 +1,13 @@
+{
+  "projects": [
+    { "id": "1", "name": "Website Redesign", "color": "#3b82f6" },
+    { "id": "2", "name": "Mobile App", "color": "#22c55e" }
+  ],
+  "tasks": [
+    { "id": "1", "title": "Design homepage mockup", "projectId": "1", "status": "pending", "createdAt": "2026-04-12T00:00:00.000Z" },
+    { "id": "2", "title": "Implement API endpoints", "projectId": "2", "status": "pending", "createdAt": "2026-04-12T00:00:00.000Z" }
+  ],
+  "timeLogs": [
+    { "id": "1", "taskId": "1", "startTime": "2026-04-12T09:00:00.000Z", "endTime": "2026-04-12T10:30:00.000Z", "duration": 5400 }
+  ]
+}
