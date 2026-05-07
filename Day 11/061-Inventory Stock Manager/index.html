@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory Stock Manager</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="main-header">
+    <h1>Inventory Stock Manager</h1>
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="inventory">Inventory</button>
+      <button class="tab-btn" data-tab="alerts">Low Stock Alerts</button>
+      <button class="tab-btn" data-tab="summary">Summary</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section id="inventory" class="tab-content active">
+      <div class="toolbar">
+        <div class="search-box">
+          <input type="text" id="searchInventory" placeholder="Search products or SKU..." aria-label="Search inventory">
+        </div>
+        <div class="filters">
+          <select id="categoryFilter" aria-label="Filter by category">
+            <option value="">All Categories</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Food">Food & Beverages</option>
+            <option value="Office">Office Supplies</option>
+            <option value="Furniture">Furniture</option>
+            <option value="Other">Other</option>
+          </select>
+          <select id="stockFilter" aria-label="Filter by stock level">
+            <option value="">All Stock Levels</option>
+            <option value="low">Low Stock</option>
+            <option value="out">Out of Stock</option>
+            <option value="ok">In Stock</option>
+          </select>
+        </div>
+        <button id="addItemBtn" class="btn btn-primary">+ Add Item</button>
+      </div>
+      <div class="inventory-stats" id="inventoryStats"></div>
+      <div id="itemList" class="item-grid"></div>
+    </section>
+
+    <section id="alerts" class="tab-content">
+      <div class="toolbar"><h2>Low Stock Alerts</h2></div>
+      <div id="alertList" class="alert-list"></div>
+    </section>
+
+    <section id="summary" class="tab-content">
+      <div class="toolbar"><h2>Inventory Summary</h2></div>
+      <div class="summary-grid" id="summaryGrid"></div>
+    </section>
+  </main>
+
+  <!-- ADD/EDIT ITEM MODAL -->
+  <div id="itemModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add Item</h2>
+        <button class="close-btn" id="closeModal" aria-label="Close">&times;</button>
+      </div>
+      <form id="itemForm" novalidate>
+        <input type="hidden" id="itemId">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="itemName">Product Name *</label>
+            <input type="text" id="itemName" required minlength="2" placeholder="Product name">
+          </div>
+          <div class="form-group">
+            <label for="itemSku">SKU *</label>
+            <input type="text" id="itemSku" required minlength="2" placeholder="SKU-001" style="text-transform:uppercase">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="itemCategory">Category</label>
+            <select id="itemCategory">
+              <option value="Electronics">Electronics</option>
+              <option value="Clothing">Clothing</option>
+              <option value="Food">Food & Beverages</option>
+              <option value="Office">Office Supplies</option>
+              <option value="Furniture">Furniture</option>
+              <option value="Other" selected>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="itemPrice">Unit Price ($)</label>
+            <input type="number" id="itemPrice" min="0" step="0.01" placeholder="0.00">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="itemQuantity">Quantity *</label>
+            <input type="number" id="itemQuantity" min="0" required placeholder="0">
+          </div>
+          <div class="form-group">
+            <label for="itemThreshold">Low Stock Threshold</label>
+            <input type="number" id="itemThreshold" min="0" placeholder="10">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Save Item</button>
+          <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
