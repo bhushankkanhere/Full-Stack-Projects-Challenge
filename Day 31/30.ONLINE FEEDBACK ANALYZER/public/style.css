@@ -1,0 +1,51 @@
+body {
+    font-family: Arial;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    margin: 0;
+}
+
+.container {
+    width: 60%;
+    margin: auto;
+    background: white;
+    margin-top: 40px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px gray;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+textarea, button {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background: #00c6ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0072ff;
+}
+
+.feedback {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.feedback span {
+    font-weight: bold;
+}

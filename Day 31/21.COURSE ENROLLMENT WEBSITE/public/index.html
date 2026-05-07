@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Enrollment</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>🎓 Course Enrollment System</h1>
+
+    <form id="enrollForm">
+        <input type="text" id="studentName" placeholder="Your Name" required>
+        <input type="email" id="studentEmail" placeholder="Your Email" required>
+        
+        <select id="courseSelect" required>
+            <option value="">Select a Course</option>
+        </select>
+
+        <button type="submit">Enroll</button>
+    </form>
+
+    <h2>Enrolled Students</h2>
+    <div id="enrollments"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

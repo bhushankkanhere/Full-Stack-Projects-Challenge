@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Attendance Management</h1>
+
+    <form id="attendanceForm">
+        <input type="text" id="studentName" placeholder="Student Name" required>
+        <input type="date" id="date" required>
+        <select id="status" required>
+            <option value="">Select Status</option>
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
+        </select>
+        <button type="submit">Mark Attendance</button>
+    </form>
+
+    <h2>Attendance Records</h2>
+    <div id="attendanceList"></div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

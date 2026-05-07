@@ -1,0 +1,47 @@
+body {
+    font-family: Arial;
+    background: linear-gradient(to right, #36d1dc, #5b86e5);
+    margin: 0;
+}
+
+.container {
+    width: 50%;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    margin-top: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px gray;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input, button {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background: #36d1dc;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #5b86e5;
+}
+
+.appointment {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}

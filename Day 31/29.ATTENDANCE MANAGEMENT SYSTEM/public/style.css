@@ -1,0 +1,51 @@
+body {
+    font-family: Arial;
+    background: linear-gradient(to right, #ff9966, #ff5e62);
+    margin: 0;
+}
+
+.container {
+    width: 60%;
+    margin: auto;
+    background: white;
+    margin-top: 40px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px gray;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input, select, button {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background: #ff9966;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ff5e62;
+}
+
+.record {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.record p {
+    margin: 0;
+}

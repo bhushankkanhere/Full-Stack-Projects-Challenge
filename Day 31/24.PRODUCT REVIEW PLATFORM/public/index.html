@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Review Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Product Review Platform</h1>
+
+    <form id="reviewForm">
+        <input type="text" id="product" placeholder="Product Name" required>
+        <input type="text" id="user" placeholder="Your Name" required>
+        
+        <select id="rating">
+            <option value="5">⭐⭐⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="3">⭐⭐⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="1">⭐</option>
+        </select>
+
+        <textarea id="comment" placeholder="Write your review"></textarea>
+        <button type="submit">Submit Review</button>
+    </form>
+
+    <div id="reviews"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
